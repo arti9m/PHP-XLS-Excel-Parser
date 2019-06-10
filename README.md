@@ -15,7 +15,7 @@ $excel->read_everything(); // Read all non-empty cells from excel file
 var_dump($excel->cells); // All read cells are saved in $excel->cells as 2-dimmensional array
 ```
 
-That's it! When you are done, you can free memory and resources with this two lines:
+That's it! When you are done, you can free memory and resources with these two lines:
 ```PHP
 $excel->free();
 unset($excel);
