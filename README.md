@@ -2,6 +2,7 @@
 Probably, the fastest possible and the most efficient parser for XLS excel files for PHP!
 
 Note: documentation writing is in progress.
+Note 2: this parser is suitable __only for older XLS files__, not the newer ones, XLSX!
 
 ## Usage
 
