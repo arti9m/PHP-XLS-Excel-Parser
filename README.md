@@ -86,6 +86,10 @@ You can instruct PHP not to use a temporary file (thus always storing Workbook s
 ```PHP
 $excel = new MSXLS("path_to_file.xls", false, 0); //temporary data is always stored in memory
 ```
+Set this parameter to `null` to use default value:
+```PHP
+$excel = new MSXLS("path_to_file.xls", false, null); //default temp file settings
+```
 _Note:_ MSCFB helper class may also need to use a temporary stream resource. It will behave the same way as described above, and will also use that 3rd parameter as its memory limiter.
 
 _Note:_ temporary files are automatically managed (created and deleted) by PHP.
