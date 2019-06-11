@@ -2529,7 +2529,7 @@ class MSXLS{
   /* ------ 10. CONSTRUCTOR AND DESTRUCTOR ------- */
   /* --------------------------------------------- */
 
-  function __construct($filename, $debug = false, $mem = 2097152, $debug_MSCFB = false){
+  function __construct($filename, $debug = false, $mem = null, $debug_MSCFB = false){
     $this->debug = (bool) $debug;
 
     if(!file_exists($filename)){
@@ -2565,8 +2565,11 @@ class MSXLS{
       //at this point we know that Workbook stream exists
 
       $temp_str = 'php://temp'; //temp file address for fopen()
-      $size = (int) $mem;
-      if($size>0) $temp_str .= '/maxmemory:'.$size; //tempfile size adjustment
+      if($mem !== null){
+        $size = (int) $mem;
+        if($size>0) $temp_str .= '/maxmemory:'.$size; //tempfile size adjustment
+        if($size===0) $temp_str = 'php://memory'; //always store data in memory
+      }
 
       $temp = null;
 
