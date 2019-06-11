@@ -104,7 +104,7 @@ _Note 2:_ temporary files are automatically managed (created and deleted) by PHP
 
 Each time an _error_ occures, the script places an error code into `$this->error` array and appends an error message to `this->err_msg`. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. _Warnings_ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use `$this->warn` to store warning codes and `$this->warn_msg` for warning texts.
 
-If an error occurs in constructor and Debug mode is disabled, the user should check if `$this->error` non-strictly evaluates to `true` (for example, `if($this->error){ /*error processing here*/ }`, in which case error text can be read from `$this->err_msg` and the most recent error code can be obtained as the last element from `$this->error` array. Same applies to Warnings, which use `$this->warn_msg` and `$this->warn`, respectively.
+If an error occurs in constructor and Debug mode is disabled, the user should check if `$this->error` non-strictly evaluates to `true` (for example, `if($this->error){ /*error processing here*/ }`, in which case error text can be read from `$this->err_msg` and the most recent error code can be obtained as the last element of `$this->error` array. Same applies to Warnings, which use `$this->warn_msg` and `$this->warn`, respectively.
 
 If Debug mode is enabled, errors and warnings are printed (echoed) to standart output.
 
