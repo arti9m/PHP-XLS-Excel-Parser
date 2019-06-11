@@ -22,7 +22,7 @@ require_once 'MSXLS.php'; // MSCFB.php is 'required once' inside MSXLS.php
 $excel = new MSXLS('path_to_file.xls');
 ```
 
-5. If no errors occured up to this point, you are ready to read the cells from your file. There are two ways you can do it: either read all cells at once into a 2-dimensional array, or read cells row by row.
+5. If no errors occured up to this point, you are ready to read the cells from your file. There are two ways you can do it: either read all cells at once into a 2-dimensional array (the fastest method), or read cells row by row (slower, but is suitable for database upload and may use much less memory, depending on usage).
 
 In any case, it's a good idea to check for errors first before reading anything:
 
@@ -30,7 +30,7 @@ In any case, it's a good idea to check for errors first before reading anything:
 if($excel->error) die($excel->err_msg); // Terminate script execution, show error message.
 ```
 
-6a. Read all cells into a 2-dimensional array:
+6. Read all cells into a 2-dimensional array:
 ```PHP
 $excel->read_everything(); // Read cells into $excel->cells
 ```
@@ -39,7 +39,7 @@ At this point all your cells data is contained inside `$excel->cells` array:
 var_dump($excel->cells); // Output all parsed cells from XLS file
 ```
 
-6b. Read all cells row by row:
+7. Read all cells row by row:
 ```PHP
 $excel->switch_to_row(); //switch to row-by-row mode
 
@@ -52,7 +52,7 @@ while($row = $excel->read_next_row()){
 
 _Note:_ `$excel->cells` will be erased when `$excel->switch_to_row()` is executed, so make sure you save all the data you need before switching to another parsing mode. If you need to switch back to 'read all at once' mode, use `$excel->switch_to_array()` method.
 
-7. If you need to perform some other memory-intensive tasks in the same script, it is a good idea to free some memory:
+8. If you need to perform some other memory-intensive tasks in the same script, it is a good idea to free some memory:
 ```PHP
 $excel->free(); // This is also called in the destructor
 unset($excel);
@@ -87,6 +87,7 @@ You can instruct PHP not to use a temporary file (thus always storing Workbook s
 $excel = new MSXLS("path_to_file.xls", false, 0); //temporary data is always stored in memory
 ```
 _Note:_ MSCFB helper class may also need to use a temporary stream resource. It will behave the same way as described above, and will also use that 3rd parameter as its memory limiter.
+
 _Note 2:_ temporary files are automatically managed (created and deleted) by PHP.
 
 
@@ -101,13 +102,13 @@ _Note 2:_ temporary files are automatically managed (created and deleted) by PHP
 
 ## 6. Error handling
 
-Each time an _error_ occures, the script places an error code into `$this->error` array and appends an error message to `this->err_msg`. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. _Warnings_ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use `$this->warn` and `$this->warn_msg` properties.
+Each time an _error_ occures, the script places an error code into `$this->error` array and appends an error message to `this->err_msg`. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. _Warnings_ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use `$this->warn` to store warning codes and `$this->warn_msg` for warning texts.
 
-If an error occurs in constructor and Debug mode is disabled, the user should check if `$this->error` non-strictly evaluates to `true` (for example, `if($this->error){ /*error processing here*/ }`, in which case error text can be read from `$this->err_msg` and the most recent error code can be obtained as the last element from `$this->error` array. Same applies to _Warnings_.
+If an error occurs in constructor and Debug mode is disabled, the user should check if `$this->error` non-strictly evaluates to `true` (for example, `if($this->error){ /*error processing here*/ }`, in which case error text can be read from `$this->err_msg` and the most recent error code can be obtained as the last element from `$this->error` array. Same applies to Warnings, which use `$this->warn_msg` and `$this->warn`, respectively.
 
 If Debug mode is enabled, errors and warnings are printed (echoed) to standart output.
 
-## 7. Security concerns
+## 7. Security considerations
 
 There are extensive error checks in every function that should prevent any potential problems no matter what file is supplied to the constructor. The only potential security risk can come from the Debug mode, which prints a function name in which an error or a warning has occured, but even then I do not see how such information can lead to problems with this particular class. It's pretty safe to say that this code can be safely run in (automated) production of any kind. Same applies to MSCFB class.
 
