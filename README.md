@@ -88,7 +88,7 @@ $excel = new MSXLS("path_to_file.xls", false, 0); //temporary data is always sto
 ```
 _Note:_ MSCFB helper class may also need to use a temporary stream resource. It will behave the same way as described above, and will also use that 3rd parameter as its memory limiter.
 
-_Note 2:_ temporary files are automatically managed (created and deleted) by PHP.
+_Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 
 ## 4. How it works
