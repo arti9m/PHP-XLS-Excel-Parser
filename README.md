@@ -222,7 +222,7 @@ $sheet['first_row'];     //*[Integer] First non-empty row number of the workshee
 $sheet['last_row'];      //*[Integer] Last non-empty row number of the worksheet
 $sheet['first_col'];     //*[Integer] First non-empty column number of the worksheet
 $sheet['last_col'];      //*[Integer] Last non-empty column number of the worksheet
-$sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in Workbook stream of XLS file;
+$sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in Workbook stream
 
 // Entries marked with * exist only for sheets of "Worksheet" type.
 ```
@@ -233,30 +233,30 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in W
 
 `get_filename()` — returns a file name string originally supplied to the constructor.
 
-`get_filesize()` — returns file size of the file supplied to the constructor.
+`get_filesize()` — returns size of the file supplied to the constructor (in bytes).
 
-`get_margins($which = 'all')` — returns currently set margins for the selected worksheet. They are set automatically when sheet is selected. Margins can be set manually with _set_margins()_ method. They define what rows and columns are read by _read_next_row()_ method.
+`get_margins($which = 'all')` — returns currently set margins for the selected worksheet. They are set automatically when the sheet is selected. Margins can be set manually with _set_margins()_ method. They define what rows and columns are read by _read_next_row()_ method.
 
 _**$which**_ can be set to _'first_row'_, _'last_row'_, _'first_col'_, or _'last_col'_ string, in which cases a corresponding value will be returned. _**$which**_ also can be set to _'all'_ or left out, in which case an array of all four margins will be returned. If _**$which**_ is set to something not mentioned above, _false_ will be returned.
 
-`$excel->set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed since the script detects these settings when file is opened.
+`set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed since the script detects these settings when file is opened.
 
-_**$enable**_ enables encoding conversion for 1995 excel strings.
+_**$enable**_ enables encoding conversion of BIFF5 strings.
 
 _**$from**_ is source encoding string, for example _'CP1252'_. Leaving it out or setting it to _null_ resets this parameter to detected internal BIFF5 codepage.
 
-_**$to**_ is target encoding string, for example _'UTF-8'_. Leaving it out or setting it to _null_ resets this parameter to the value returned by `mb_internal_encoding()`.
+_**$to**_ is target encoding string, for example _'UTF-8'_. Leaving it out or setting it to _null_ resets this parameter to the value returned by _mb_internal_encoding()_.
 
-_**$use_iconv**_ — If `true`, _iconv()_ will be used for convertion. Otherwise, _mb_convert_encoding()_ will be used.
+_**$use_iconv**_ — If _true_, _iconv()_ will be used for convertion. Otherwise, _mb_convert_encoding()_ will be used.
 
-`$excel->set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to. 
+`set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to. _**$enc**_ is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` will be used.
 
-_**$enc**_ is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` will be used.
-
+_Note:_ Setting _$to_ parameter in _set_encodings()_ and using _set_output_encoding()_ do the same thing. _set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
+---
 `select_sheet($sheet = -1)` — Select a worksheet to read data from.
 
 _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheets()_ to get those, if needed. _-1_ or leaving out the parameter will select first valid worksheet.
-
+---
 `switch_to_row()` — switch to __Row-by-row__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
 `switch_to_array()` — switch __Array__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
