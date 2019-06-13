@@ -99,7 +99,7 @@ var_dump($excel->cells); // Output all parsed cells from XLS file
 When `$excel->read_everything()` is invoked for the first time for your file, a private structure called __SST__ is built which contains all strings for all worksheets. It sits in memory until Parsing mode is changed or re-selected, or `$excel->free()` called, or your MSXLS instance (`$excel` variable in the examples here) had been destroyed. Therefore, it is rather memory-hungry mode if your file has a lot of unique strings. Non-unique strings are stored only once. Also, PHP is smart enough not to duplicate those strings in memory when a string is read into `$excel->cells` array from __SST__ storage.
 
 
-In this mode, __empty rows and cells are ignored__. Boolean excel cells are parsed to `true` or `false`. If excel internally represents a whole number as _float_ (which is often the case), it will be parsed to _float_ without changes.
+In this mode, __empty rows and cells are ignored__. Boolean excel cells are parsed as `true` or `false`. If excel internally represents a whole number as _float_ (which is often the case), it will be parsed as _float_ without changes.
 
 
 `$excel->cells` array first key is _zero based_ excel row number. For example, `$excel->cells[0]` will return an array of cells of excel row 1 (provided it is not empty). If your first populated row number in excel is 5, the first entry of `$excel->cells` will have index of 4.
@@ -186,128 +186,133 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 ### Properties
 
-`(bool) $excel->debug`: whether or not to display error and warning messages. Can be set as the 2nd parameter to constructor.
+`(bool) $debug` — whether or not to display error and warning messages. Can be set as the 2nd parameter to constructor.
 
-`(string) $excel->err_msg`: a string that contains all error messages concatenated into one;
+`(string) $err_msg` — a string that contains all error messages concatenated into one.
 
-`(string) $excel->warn_msg`: same as above, but for warnings;
+`(string) $warn_msg` — same as above, but for warnings.
 
-`(array) $excel->error`: array of error codes, empty if no errors occured;
+`(array) $error` — array of error codes, empty if no errors occured.
 
-`(array) $excel->warn`: array of warning codes, empty if no warnings occured;
+`(array) $warn` — array of warning codes, empty if no warnings occured.
 
-`(array) $excel->cells`: two-dimensional array, storage for parsed cells for __Array mode__. Filled when `$excel->read_everything()` is invoked. This propertry is made public (instead of using a getter) mainly for performance reasons.
+`(array) $cells` — two-dimensional array which is the storage for cells parsed in __Array__ mode. Filled when _read_everything()_ is invoked. This propertry is made public (instead of using a getter) mainly for performance reasons.
 
 ### Methods (functions)
 
-$excel->get_biff_ver(): returns version of excel file. `5` means 1995 XLS file, `8` means 1997-2003 XLS file.
+`get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
-$excel->get_codepage(): returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific encoding. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
+`get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific encoding. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
 
-$excel->get_sheets(): returns array of structures that represent all sheet info. The following properties MAY exist depending on sheet type:
+`get_sheets()` — returns array of structures that represent all sheet info. The following properties MAY exist depending on sheet type:
+```PHP
+$excel = new MSXLS('file.xls');
+$sheets = $excel->get_sheets(); //$sheets is array of sheet info structures
+$sheet = reset($sheets); //$sheet now contains the first element of $sheets array
+
+// Here is complete description of the sheet info structure
+$sheet['error'];         //[Boolean] whether an error occured during sheet information parsing
+$sheet['err_msg'];       //[String] Error messages, if any
+$sheet['name'];          //[String] Sheet name
+$sheet['hidden'];        //[Integer] 0: normal, 1: hidden, 2: very hidden (set via excel macro);
+$sheet['type'];          //[String] Sheet type: Worksheet, Macro, Chart, VB module or Dialog
+$sheet['BOF_offset'];    //[Integer] Sheet offset in Workbook stream of XLS file;
+$sheet['empty'];         //*[Boolean] Whether the worksheet is empty;
+$sheet['first_row'];     //*[Integer] First non-empty 0-based row number of worksheet
+$sheet['last_row'];      //*[Integer] Last non-empty 0-based row number of worksheet;
+$sheet['first_col'];     //*[Integer] First non-empty 0-based column number of worksheet;
+$sheet['last_col'];      //*[Integer] Last non-empty 0-based column number of worksheet;
+$sheet['cells_offset'];  //*[Integer] Offset of the first cell data in Workbook stream of XLS file;
+
+// Entries marked with * exist only for sheets of "Worksheet" type.
 ```
-(boolean) 'error': Whether an error occured during parsing sheet information;
-(string) 'err_msg': String with error messages, if any;
-(string) 'name': Sheet name;
-(integer) 'hidden': Sheet `Hidden` level. 0: normal, 1: hidden, 2: very hidden (can be set via excel macro);
-(string) 'type': Type of sheet: Worksheet, Macro, Chart, VB module, Dialog;
-(integer) 'BOF_offset': offset of this sheet in Workbook stream of XLS file;
-(boolean) 'empty': Whether the worksheet is empty;
-(integer) 'first_row': First non-empty 0-based row number of worksheet;
-(integer) 'last_row': Last non-empty 0-based row number of worksheet;
-(integer) 'first_col': First non-empty 0-based column number of worksheet;
-(integer) 'last_col': Last non-empty 0-based column number of worksheet;
-(integer) 'cells_offset': offset of the first cell data in Workbook stream of XLS file;
-(integer) 'number': Sheet number in XLS file.
-```
 
-Most of the entries mentioned above exist only for `Worksheet` sheets. `'number'` entry is the same number as an index number of the sheet info structure in the array returned by `$excel->get_sheets()`.
+`get_valid_sheets()` — same as above, but returns only valid non-empty selectable worksheets. Additional _$sheet\['number'\]_ entry is present, which is the same number as the index of this sheet in the array returned by  _get_sheets()_.
 
-$excel->get_valid_sheets(): same as above, but returns only valid non-empty selectable worksheets.
+`get_active_sheet()` — returns currently selected sheet info in the same structure that _get_valid_sheets()_ array consists of.
 
-$excel->get_active_sheet(): returns currently selected sheet info in the same structure that `$excel->get_sheets()` array consists of.
+`get_filename()` — returns a file name string originally supplied to the constructor.
 
-$excel->get_filename(): returns a file name supplied to the constructor in the first place.
+`get_filesize()` — returns file size of the file supplied to the constructor.
 
-$excel->get_filesize(): returns file size of the file supplied to the constructor.
+`get_margins($which = 'all')` — returns currently set margins for the selected worksheet. They are set automatically when sheet is selected. Margins can be set manually with _set_margins()_ method. They define what rows and columns are read by _read_next_row()_ method.
 
-$excel->get_margins($which = 'all'): returns currently set margins for currently selected worksheet. These are set automatically when sheet is selected. Margins can be set manually with `$excel->set_margins()` method.
+_**$which**_ can be set to _'first_row'_, _'last_row'_, _'first_col'_, or _'last_col'_ string, in which cases a corresponding value will be returned. _**$which**_ also can be set to _'all'_ or left out, in which case an array of all four margins will be returned. If _**$which**_ is set to something not mentioned above, _false_ will be returned.
 
-`$which` can be set to `'first_row'`, `'last_row'`, `'first_col'`, `'last_col'`, in which cases a corresponding integer value will be returned. `$which` also can be set to `'all'` (default), in which case an array of all four margins will be returned.
-If `$which` parameter is set to something not mentioned above, `false` will be returned.
+`$excel->set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed since the script detects these settings when file is opened.
 
-`$excel->set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)`: manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed as the script tries to detect the settings when file is opened.
-`$enable` enables encoding conversion for 1995 excel strings.
+_**$enable**_ enables encoding conversion for 1995 excel strings.
 
-`$from` is source encoding string, for example `'CP1252'`. `null` sets `$from` to internal detected BIFF5 codepage.
+_**$from**_ is source encoding string, for example _'CP1252'_. Leaving it out or setting it to _null_ resets this parameter to detected internal BIFF5 codepage.
 
-`$to` is target encoding string, for example `'UTF-8'`. `null` sets this parameter to `mb_internal_encoding()`.
+_**$to**_ is target encoding string, for example _'UTF-8'_. Leaving it out or setting it to _null_ resets this parameter to the value returned by `mb_internal_encoding()`.
 
-`$use_iconv`: if `true`, `iconv()` will be used for convertion. Otherwise, `mb_convert_encoding()` will be used.
+_**$use_iconv**_ — If `true`, _iconv()_ will be used for convertion. Otherwise, _mb_convert_encoding()_ will be used.
 
-`$excel->set_output_encoding($enc = null)`: sets output encoding which excel strings should be decoded to. 
+`$excel->set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to. 
 
-`$enc` is target encoding string. If parameter set to `null` or left out, a value returned by `mb_internal_encoding()` will be used.
+_**$enc**_ is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` will be used.
 
-`select_sheet($sheet = -1)` -- Select a worksheet to read data from.
-`$sheet` must be either a sheet number or a sheet name. See `get_valid_sheets()`. `-1` or leaving out the parameter will select first valid worksheet.
+`select_sheet($sheet = -1)` — Select a worksheet to read data from.
 
-`switch_to_row()` -- switch to Row-by-row parsing mode. Will also execute `free(false)` and `select_sheet()`.
+_**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheets()_ to get those, if needed. _-1_ or leaving out the parameter will select first valid worksheet.
 
-`switch_to_array()` -- switch Array parsing mode. Will also execute `free(false)` and `select_sheet()`.
+`switch_to_row()` — switch to __Row-by-row__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
-`read_everything()` -- read all cells from file into `cells` property. Works only in Array mode.
+`switch_to_array()` — switch __Array__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
-`read_next_row()` -- parses next row and returns array of parsed cells in. Only Row-by-row mode.
+`read_everything()` — read all cells from file into _cells_ property. Works only in __Array__ mode.
+
+`read_next_row()` — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
 
 ##### Memory free-ers
-`free_stream()` -- Close Workbook stream, free memory associated with it and delete temporary files.
-`free_cells()` -- re-initialize `MSXLS::cells` array storage (parsed cell data from Array mode).
-`free_sst()` -- re-initialize SST structure (Shared Strings Table from Array mode).
-`free_rows_map()` -- re-initialize rows map storage used for Row-by-row mode.
-`free_sst_maps()` -- re-initialize SST offsets map and SST lengths storage used for Row-by-row mode.
-`free_maps()` -- execute both `free_row_map()` and `free_sst_maps()`.
+`free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
+`free_cells()` — re-initialize _cells_ array storage (parsed cell data from __Array__ mode).
+`free_sst()` — re-initialize SST structure (Shared Strings Table from __Array__ mode).
+`free_rows_map()` — re-initialize rows map storage used for __Row-by-row__ mode.
+`free_sst_maps()` — re-initialize SST offsets map and SST lengths storage used for __Row-by-row__ mode.
+`free_maps()` — execute both _free_row_map()_ and _free_sst_maps()_.
 
-`free($stream = true)` -- free memory by executing all "free"-related functions mentioned above. `free_stream()` is called only if `$stream == true`.
+`free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if __*$stream*__ evaluates to _true_.
 
-##### Reading settings for Row-by-row mode
+##### Reading settings (mostly for Row-by-row mode)
 
-`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` -- setup how cells with excel errors are processed. if `$fill==true`, cells will be parsed to `$value`. `'#DEFAULT!'` value is special as it will expand to actual excel error value. For example, if cell has a number divided by zero, it will be parsed to `#DIV/0!` string. If `$value` is set to other value, error cells will be parsed directly as `$value`. If `$fill==false`, cells with errors will be treated as empty.
+`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed. If __*$fill*__ evaluates to _true_, cells will be parsed as __*$value*__. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If __*$value*__ is set to some other value, error cells will be parsed directly as __*$value*__. If __*$fill*__ evaluates to _false_, cells with errors will be treated as empty cells.
 
-Note: this is the only setting that also works in Array mode.
+Note: this is the only setting that also works in __Array__ mode.
 
-`set_margins($first_row = null, $last_row = null, $first_col = null, $last_col = null)` -- sets first row, last row, first column and last column that are parsed. If a parameter is `null`, the corresponding margin is not changed. If a parameter is `-1`, the corresponding margin is set to the default value. The default values correspond to first/last non-empty row/column in a worksheet.
+`set_margins($first_row = null, $last_row = null, $first_col = null, $last_col = null)` — sets first row, last row, first column and last column that are parsed. If a parameter is _null_ or left out, the corresponding margin is not changed. If a parameter is _-1_, the corresponding margin is set to the default value. The default values correspond to the first/last non-empty row/column in a worksheet.
 
-`set_active_row($row_number)` -- set which row to read next.
+`set_active_row($row_number)` — set which row to read next. __*$row_number*__ is zero-based excel row number and it must not be out of bounds set by _set_margins()_ method.
 
-`last_read_row_number()` -- returns most recently parsed row number. Valid only if called immediately after `read_next_row()`.
+`last_read_row_number()` — returns most recently parsed row number. Valid only if called immediately after _read_next_row()_.
 
-`next_row_number()` -- returns row number that is to be parsed upon next call of `read_next_row()`. Returns `-1` if there is no more rows left to parse.
+`next_row_number()` -- returns row number that is to be parsed upon next call of _read_next_row()_.  Returns _-1_ if there is no more rows left to parse.
 
-`set_empty_value($value = null)` -- set _empty value_ - a value that is used to parse empty cells to.
+`set_empty_value($value = null)` — set __*$value*__ as _empty value_, a value that is used to parse empty cells as.
 
-`use_empty_cols($set = false)` -- whether or not to parse empty columns to _empty value_.
+`use_empty_cols($set = false)` — whether or not to parse empty columns to _empty value_.
 
-`use_empty_rows($set = false` -- whether or not to parse empty rows.
-Note: if empty columns parsing is disabled, `read_next_row()` will return `-1` when empty row is encountered. Otherwise, it will return array of cells filled with _empty value_.
+`use_empty_rows($set = false)` — whether or not to parse empty rows.
+Note: if empty columns parsing is disabled (it is disabled by default), _read_next_row()_ will return _-1_ when an empty row is encountered. If empty columns parsing is enabled with _use_empty_cols(true)_, it will return array of cells filled with _empty value_.
 
-`set_boolean_values($true = true, $false = false)` -- set values which excel boolean cells are parsed to. By default, TRUE cells are parsed to PHP `true` value, FALSE cells are parsed to PHP `false` value.
+`set_boolean_values($true = true, $false = false)` — set values which excel boolean cells are parsed as. By default, TRUE cells are parsed as PHP _true_ value, FALSE cells are parsed as PHP _false_ value.
 
-`set_float_to_int($tf = false)` -- whether or not to parse excel cells with whole float numbers to integers. Often whole numbers are stored as float internally in XLS file, and by default they are parsed to floats. This setting allows to parse such numbers to integer type. Note: cells with numbers internally stored as integers are always parsed to integers.
+`set_float_to_int($tf = false)` — whether or not to parse excel cells with whole float numbers to integers. Often whole numbers are stored as float internally in XLS file, and by default they are parsed as floats. This setting allows to parse such numbers as integer type. Note: cells with numbers internally stored as integers are always parsed as integers.
 
 ##### Constructor and destructor
 
-`__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` - open file, extract Workbook stream (or use the file as Workbook stream), execute `set_output_encoding()` and `get_data()` methods.
+`__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` — open file, extract Workbook stream (or use the file as Workbook stream), execute _set_output_encoding()_ and _get_data()_ methods.
 
-`$filename` -- path to XLS file.
+__*$filename*__ — path to XLS file.
 
-`$debug` -- if evaluates to `true`, enables Debug mode.
+__*$debug*__ — if evaluates to _true_, enables [Debug mode](#debug-mode). 
 
-`$mem` -- sets memory limit for temporary memory streams vs temporary files.
+__*$mem*__ — sets memory limit for [temporary memory streams vs temporary files](#temporary-files-and_memory "Temporary files and memory").
 
-`$debug_MSCFB` -- if evaluates to `true`, enables Debug mode in helper class, MSCFB.
+__*$debug_MSCFB*__ — if evaluates to _true_, enables Debug mode in MSCFB helper class.
 
-`__destruct()` - execute `free()` method, thus closing all opened streams, deleting temporary files and erasing big structures.
+`__destruct()` — execute _free()_ method, thus closing all opened streams, deleting temporary files and erasing big structures.
 
 ## 6. Error handling
 
