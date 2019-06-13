@@ -202,8 +202,6 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 ---
 #### General
-
----
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
 `get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
@@ -278,8 +276,6 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 
 ---
 #### Memory free-ers
-
----
 `free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
 
 `free_cells()` — re-initialize _cells_ array storage (parsed cell data from __Array__ mode).
@@ -296,8 +292,6 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 
 ---
 #### Reading settings (mostly for Row-by-row mode)
-
----
 `set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed. If __*$fill*__ evaluates to _true_, cells will be parsed as __*$value*__. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If __*$value*__ is set to some other value, error cells will be parsed directly as __*$value*__. If __*$fill*__ evaluates to _false_, cells with errors will be treated as empty cells.  
 Note: this is the only setting that also works in __Array__ mode.
 
@@ -323,8 +317,6 @@ Note: if empty columns parsing is disabled (it is disabled by default), _read_ne
 
 ---
 #### Constructor and destructor
-
----
 `__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` — open file, extract Workbook stream (or use the file as Workbook stream), execute _set_output_encoding()_ and _get_data()_ methods.
 
 __*$filename*__ — path to XLS file.
