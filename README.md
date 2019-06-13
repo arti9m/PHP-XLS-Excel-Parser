@@ -202,8 +202,10 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
+---
 `get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
 
+---
 `get_sheets()` — returns array of structures that represent all sheet info. See the code below.
 ```PHP
 $excel = new MSXLS('file.xls');
@@ -227,18 +229,24 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in W
 // Entries marked with * exist only for sheets of "Worksheet" type.
 ```
 
+---
 `get_valid_sheets()` — same as above, but returns only valid non-empty selectable worksheets. Additional _$sheet\['number'\]_ entry is present, which is the same number as the index of this sheet in the array returned by  _get_sheets()_.
 
+---
 `get_active_sheet()` — returns currently selected sheet info in the same structure that _get_valid_sheets()_ array consists of.
 
+---
 `get_filename()` — returns a file name string originally supplied to the constructor.
 
+---
 `get_filesize()` — returns size of the file supplied to the constructor (in bytes).
 
+---
 `get_margins($which = 'all')` — returns currently set margins for the selected worksheet. They are set automatically when the sheet is selected. Margins can be set manually with _set_margins()_ method. They define what rows and columns are read by _read_next_row()_ method.
 
 _**$which**_ can be set to _'first_row'_, _'last_row'_, _'first_col'_, or _'last_col'_ string, in which cases a corresponding value will be returned. _**$which**_ also can be set to _'all'_ or left out, in which case an array of all four margins will be returned. If _**$which**_ is set to something not mentioned above, _false_ will be returned.
 
+---
 `set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed since the script detects these settings when file is opened.
 
 _**$enable**_ enables encoding conversion of BIFF5 strings.
@@ -249,6 +257,7 @@ _**$to**_ is target encoding string, for example _'UTF-8'_. Leaving it out or se
 
 _**$use_iconv**_ — If _true_, _iconv()_ will be used for convertion. Otherwise, _mb_convert_encoding()_ will be used.
 
+---
 `set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to. _**$enc**_ is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` will be used.
 
 _Note:_ Setting _$to_ parameter in _set_encodings()_ and using _set_output_encoding()_ do the same thing. _set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
@@ -266,6 +275,8 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 `read_everything()` — read all cells from file into _cells_ property. Works only in __Array__ mode.
 
 `read_next_row()` — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
+
+---
 
 ##### Memory free-ers
 `free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
