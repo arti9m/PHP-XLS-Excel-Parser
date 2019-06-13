@@ -202,7 +202,6 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
----
 `get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
 
 ---
@@ -232,13 +231,10 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in W
 ---
 `get_valid_sheets()` — same as above, but returns only valid non-empty selectable worksheets. Additional _$sheet\['number'\]_ entry is present, which is the same number as the index of this sheet in the array returned by  _get_sheets()_.
 
----
 `get_active_sheet()` — returns currently selected sheet info in the same structure that _get_valid_sheets()_ array consists of.
 
----
 `get_filename()` — returns a file name string originally supplied to the constructor.
 
----
 `get_filesize()` — returns size of the file supplied to the constructor (in bytes).
 
 ---
@@ -280,10 +276,15 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 
 ##### Memory free-ers
 `free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
+
 `free_cells()` — re-initialize _cells_ array storage (parsed cell data from __Array__ mode).
+
 `free_sst()` — re-initialize SST structure (Shared Strings Table from __Array__ mode).
+
 `free_rows_map()` — re-initialize rows map storage used for __Row-by-row__ mode.
+
 `free_sst_maps()` — re-initialize SST offsets map and SST lengths storage used for __Row-by-row__ mode.
+
 `free_maps()` — execute both _free_row_map()_ and _free_sst_maps()_.
 
 `free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if __*$stream*__ evaluates to _true_.
@@ -293,6 +294,7 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 `set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed. If __*$fill*__ evaluates to _true_, cells will be parsed as __*$value*__. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If __*$value*__ is set to some other value, error cells will be parsed directly as __*$value*__. If __*$fill*__ evaluates to _false_, cells with errors will be treated as empty cells.
 
 Note: this is the only setting that also works in __Array__ mode.
+
 
 `set_margins($first_row = null, $last_row = null, $first_col = null, $last_col = null)` — sets first row, last row, first column and last column that are parsed. If a parameter is _null_ or left out, the corresponding margin is not changed. If a parameter is _-1_, the corresponding margin is set to the default value. The default values correspond to the first/last non-empty row/column in a worksheet.
 
@@ -313,8 +315,10 @@ Note: if empty columns parsing is disabled (it is disabled by default), _read_ne
 
 `set_float_to_int($tf = false)` — whether or not to parse excel cells with whole float numbers to integers. Often whole numbers are stored as float internally in XLS file, and by default they are parsed as floats. This setting allows to parse such numbers as integer type. Note: cells with numbers internally stored as integers are always parsed as integers.
 
+---
 ##### Constructor and destructor
 
+---
 `__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` — open file, extract Workbook stream (or use the file as Workbook stream), execute _set_output_encoding()_ and _get_data()_ methods.
 
 __*$filename*__ — path to XLS file.
@@ -325,6 +329,7 @@ __*$mem*__ — sets memory limit for [temporary memory streams vs temporary file
 
 __*$debug_MSCFB*__ — if evaluates to _true_, enables Debug mode in MSCFB helper class.
 
+---
 `__destruct()` — execute _free()_ method, thus closing all opened streams, deleting temporary files and erasing big structures.
 
 ## 6. Error handling
