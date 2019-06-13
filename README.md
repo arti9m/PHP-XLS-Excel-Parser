@@ -273,8 +273,9 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 `read_next_row()` — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
 
 ---
-
 ##### Memory free-ers
+
+---
 `free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
 
 `free_cells()` — re-initialize _cells_ array storage (parsed cell data from __Array__ mode).
@@ -289,10 +290,11 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 
 `free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if __*$stream*__ evaluates to _true_.
 
+---
 ##### Reading settings (mostly for Row-by-row mode)
 
-`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed. If __*$fill*__ evaluates to _true_, cells will be parsed as __*$value*__. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If __*$value*__ is set to some other value, error cells will be parsed directly as __*$value*__. If __*$fill*__ evaluates to _false_, cells with errors will be treated as empty cells.
-
+---
+`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed. If __*$fill*__ evaluates to _true_, cells will be parsed as __*$value*__. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If __*$value*__ is set to some other value, error cells will be parsed directly as __*$value*__. If __*$fill*__ evaluates to _false_, cells with errors will be treated as empty cells.  
 Note: this is the only setting that also works in __Array__ mode.
 
 
