@@ -252,10 +252,12 @@ _**$use_iconv**_ — If _true_, _iconv()_ will be used for convertion. Otherwise
 `set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to. _**$enc**_ is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` will be used.
 
 _Note:_ Setting _$to_ parameter in _set_encodings()_ and using _set_output_encoding()_ do the same thing. _set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
+
 ---
 `select_sheet($sheet = -1)` — Select a worksheet to read data from.
 
 _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheets()_ to get those, if needed. _-1_ or leaving out the parameter will select first valid worksheet.
+
 ---
 `switch_to_row()` — switch to __Row-by-row__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
