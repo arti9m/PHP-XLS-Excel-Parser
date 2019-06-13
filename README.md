@@ -202,27 +202,27 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
-`get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific encoding. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
+`get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
 
-`get_sheets()` — returns array of structures that represent all sheet info. The following properties MAY exist depending on sheet type:
+`get_sheets()` — returns array of structures that represent all sheet info. See the code below.
 ```PHP
 $excel = new MSXLS('file.xls');
 $sheets = $excel->get_sheets(); //$sheets is array of sheet info structures
 $sheet = reset($sheets); //$sheet now contains the first element of $sheets array
 
-// Here is complete description of the sheet info structure
-$sheet['error'];         //[Boolean] whether an error occured during sheet information parsing
+// Here is complete description of the sheet info structure:
+$sheet['error'];         //[Boolean] whether an error occured while collecting sheet information
 $sheet['err_msg'];       //[String] Error messages, if any
 $sheet['name'];          //[String] Sheet name
-$sheet['hidden'];        //[Integer] 0: normal, 1: hidden, 2: very hidden (set via excel macro);
+$sheet['hidden'];        //[Integer] 0: normal, 1: hidden, 2: very hidden (set via excel macro)
 $sheet['type'];          //[String] Sheet type: Worksheet, Macro, Chart, VB module or Dialog
-$sheet['BOF_offset'];    //[Integer] Sheet offset in Workbook stream of XLS file;
-$sheet['empty'];         //*[Boolean] Whether the worksheet is empty;
-$sheet['first_row'];     //*[Integer] First non-empty 0-based row number of worksheet
-$sheet['last_row'];      //*[Integer] Last non-empty 0-based row number of worksheet;
-$sheet['first_col'];     //*[Integer] First non-empty 0-based column number of worksheet;
-$sheet['last_col'];      //*[Integer] Last non-empty 0-based column number of worksheet;
-$sheet['cells_offset'];  //*[Integer] Offset of the first cell data in Workbook stream of XLS file;
+$sheet['BOF_offset'];    //[Integer] Sheet byte offset in Workbook stream of XLS file
+$sheet['empty'];         //*[Boolean] Whether the worksheet is empty
+$sheet['first_row'];     //*[Integer] First non-empty row number of the worksheet
+$sheet['last_row'];      //*[Integer] Last non-empty row number of the worksheet
+$sheet['first_col'];     //*[Integer] First non-empty column number of the worksheet
+$sheet['last_col'];      //*[Integer] Last non-empty column number of the worksheet
+$sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in Workbook stream of XLS file;
 
 // Entries marked with * exist only for sheets of "Worksheet" type.
 ```
