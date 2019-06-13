@@ -200,6 +200,10 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 ### Methods (functions)
 
+---
+#### General
+
+---
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
 `get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
@@ -273,7 +277,7 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 `read_next_row()` — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
 
 ---
-##### Memory free-ers
+#### Memory free-ers
 
 ---
 `free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
@@ -291,7 +295,7 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 `free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if __*$stream*__ evaluates to _true_.
 
 ---
-##### Reading settings (mostly for Row-by-row mode)
+#### Reading settings (mostly for Row-by-row mode)
 
 ---
 `set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed. If __*$fill*__ evaluates to _true_, cells will be parsed as __*$value*__. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If __*$value*__ is set to some other value, error cells will be parsed directly as __*$value*__. If __*$fill*__ evaluates to _false_, cells with errors will be treated as empty cells.  
@@ -318,7 +322,7 @@ Note: if empty columns parsing is disabled (it is disabled by default), _read_ne
 `set_float_to_int($tf = false)` — whether or not to parse excel cells with whole float numbers to integers. Often whole numbers are stored as float internally in XLS file, and by default they are parsed as floats. This setting allows to parse such numbers as integer type. Note: cells with numbers internally stored as integers are always parsed as integers.
 
 ---
-##### Constructor and destructor
+#### Constructor and destructor
 
 ---
 `__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` — open file, extract Workbook stream (or use the file as Workbook stream), execute _set_output_encoding()_ and _get_data()_ methods.
