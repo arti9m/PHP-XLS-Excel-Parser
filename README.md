@@ -202,6 +202,9 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 ---
 #### General
+
+`get_data()` — Checks file for errors and encryption, gathers information such as CODEPAGE for BIFF5, SST location for BIFF8. Gathers information about all sheets in the file. This method is called automatically when file is opened. Invoking it manually makes sence only if BIFF5 codepage was detected incorrectly and you cannot see sheet names (and you really need them). In this case, encoding settings must be configured with _set_encodings()_ after file opening and _get_data()_ should be called manually after it.
+
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
 `get_codepage()` — returns CODEPAGE string. Relevant only for 1995 BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8 (1997-2003) all strings are unicode (UTF-16 little endian).
@@ -323,7 +326,7 @@ __*$filename*__ — path to XLS file.
 
 __*$debug*__ — if evaluates to _true_, enables [Debug mode](#debug-mode). 
 
-__*$mem*__ — sets memory limit for [temporary memory streams vs temporary files](#temporary-files-and_memory "Temporary files and memory").
+__*$mem*__ — sets memory limit for [temporary memory streams vs temporary files](#temporary-files-and-memory "Temporary files and memory").
 
 __*$debug_MSCFB*__ — if evaluates to _true_, enables Debug mode in MSCFB helper class.
 
