@@ -184,13 +184,13 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 ### Rows and columns numeration
 
-Unlike excel, rows and columns enumeration in this parser is zero-based, whereas in excel row numeration is numeric and starts from 1 (1, 2, 3, 4, 5 ...), and column numeration starts with A (A, B, C, D, E, ... AA, AB, AC ...). Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is two-dimensional array. The 1st dimension is the row number, and the 2nd one is the column number. So, A1 will become `$cells[0][0]`, A3 — `$cells[2][0]`, B5 — `$cells[4][1]`, C10 — `$cells[9][2]`, and so on. In __Row-by-row__ mode a single row is returned (for example, _$row_). It is a simple array of cells. Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, user can get zero-based row number with _last_read_row_number()_ method.
+Unlike excel, rows and columns enumeration in this parser is zero-based, whereas in excel row numeration is numeric and starts from 1 (1, 2, 3, 4, 5 ...), and column numeration is alphabetical and starts with A (A, B, C, D, E, ... AA, AB, AC ...). Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is two-dimensional array. The 1st dimension is the row number, and the 2nd one is the column number. So, A1 will become `$cells[0][0]`, A3 — `$cells[2][0]`, B5 — `$cells[4][1]`, C10 — `$cells[9][2]`, and so on. In __Row-by-row__ mode a single row is returned (for example, _$row_). It is a simple array of cells. Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, user can get zero-based row number with _last_read_row_number()_ method.
 
 ### Some terms
 
 A _Compound File_, or Microsoft Binary Compound File, is a special file format which is essentially a FAT-like container for other files.
 
-_Workbook stream_, or just _Workbook_ is a binary bytestream that essentially represents excel file.
+_Workbook stream_, or just _Workbook_ is a binary bytestream that essentially represents excel BIFF file.
 
 Excel file format is known as _BIFF_, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called _SST_ (Shared Strings Table), which stores unique strings inside itself in UTF16 little-endian encoding, and reference to SST entry is stored in cell.
 
