@@ -182,6 +182,40 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 ## 4. How it works
 
+### Rows and columns numeration
+
+Unlike excel, rows and columns enumeration in this parser is zero-based, whereas in excel row numeration is numeric and starts from 1 (1, 2, 3, 4, 5 ...), and column numeration starts with A (A, B, C, D, E, ... AA, AB, AC ...). Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is two-dimensional array. The 1st dimension is the row number, and the 2nd one is the column number. So, A1 will become `$cells[0][0]`, A3 — `$cells[2][0]`, B5 — `$cells[4][1]`, C10 — `$cells[9][2]`, and so on. In __Row-by-row__ mode a single row is returned (for example, _$row_). It is a simple array of cells. Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, user can get zero-based row number with _last_read_row_number()_ method.
+
+### Some terms
+
+A _Compound File_, or Microsoft Binary Compound File, is a special file format which is essentially a FAT-like container for other files.
+
+_Workbook stream_, or just _Workbook_ is a binary bytestream that essentially represents excel file.
+
+Excel file format is known as _BIFF_, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called _SST_ (Shared Strings Table), which stores unique strings inside itself in UTF16 little-endian encoding, and reference to SST entry is stored in cell.
+
+Workbook stream consists of Workbook Globals substream and one or more Sheet substreams. Workbook Globals contains information about file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or Sheets represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
+
+Excel keeps track of cells starting with first non-empty row and non-empty column, ending with last non-empty row and non-empty column. All other cells are completely ignored by this parser like they don't exist at all.
+
+### What happens when I open file
+
+Note: during every stage extensive error checking is performed. See [Error handling](#error-handling) for more info.
+
+When a user opens XLS file, for example by executing `$excel = new MSXLS('file.xls');`, first thing happens is the script checks whether XLS file is stored as a Compound File (most of the time it is) or as a Workbook stream. If it is a Compound File, the script attempts to extract Workbook stream to temporary file and use that file in the future for all operations. Otherwise it will directly use supplied XLS file. The script never opens supplied XLS file for writing.
+
+After Workbook stream is accessed, the output encoding is set to _mb_internal_encoding()_ return value. Then _get_data()_ is executed: the script extracts information such as sheets count, codepage, sheets byte offsets, etc.
+
+After that, either the first non-empty worksheet will be selected and ready for parsing and all other sheets information will be available to the user, or some error will be created (for example, when no non-empty worksheet was found).
+
+By default, __Array__ parsing mode is active.
+
+Attempts to invoke a __Row-by-row__ related method that is suitable for __Array__ mode only (and vice versa) will create an error, disabling any further actions most of the time.
+
+It is now possible to select and setup parsing mode.
+
+When a worksheet is parsed, you can select another worksheet for parsing (if any) with _select_sheet()_ method. When you are finished parsing a file, it is a good idea to clean up, especially if something else is going on in your script later on. `$excel->free()` method and `unset($excel)` function called one after another is the best way to do it.
+
 ## 5. Public properties and methods
 
 ### Properties
