@@ -319,7 +319,7 @@ class MSXLS{
   }
 
   //whether or not fill cells with excel errors and default error value
-  public function set_fill_xl_errors($fill = true, $value = '#DEFAULT!'){
+  public function set_fill_xl_errors($fill = false, $value = '#DEFAULT!'){
     $this->fill_err = (bool) $fill;
     $this->err_val = $value;
   }
@@ -456,7 +456,7 @@ class MSXLS{
   }
 
   //[row-by-row] If float is a whole number, convert it to integer
-  public function set_float_to_int($tf){
+  public function set_float_to_int($tf = false){
     $this->float_to_int = (bool) $tf;
   }
 
