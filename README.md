@@ -212,7 +212,7 @@ By default, __Array__ parsing mode is active.
 
 Attempts to invoke a __Row-by-row__ related method that is suitable for __Array__ mode only (and vice versa) will create an error, disabling any further actions most of the time.
 
-It is now possible to select and setup parsing mode.
+If no errors occured, it is now possible to select and setup parsing mode.
 
 When a worksheet is parsed, you can select another worksheet for parsing (if any) with _select_sheet()_ method. When you are finished parsing a file, it is a good idea to clean up, especially if something else is going on in your script later on. `$excel->free()` method and `unset($excel)` function called one after another is the best way to do it.
 
