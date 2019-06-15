@@ -186,7 +186,7 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 ## 4. How it works
 
 ### Rows and columns numeration
-Rows and columns numeration in this parser is zero-based. Excel row numeration is numeric and starts from _1_, and column numeration is alphabetical and starts with _A_. Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is two-dimensional array. The 1st dimension is the row number, and the 2nd one is the column number. In __Row-by-row__ mode a single row is returned as an array of cells. If `$row` contains a row returned by _read_next_row()_, Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, user can get zero-based row number with _last_read_row_number()_ method. The table below illustrates how the cells are numerated.
+Rows and columns numeration in this parser is zero-based. Excel row numeration is numeric and starts from _1_, and column numeration is alphabetical and starts with _A_. Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is a two-dimensional array. The 1st index corresponds to row number, and the 2nd index is the column number. In __Row-by-row__ mode, a single row is returned as an array of cells. If `$row` contains a row returned by _read_next_row()_, Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, the user can get zero-based row number with _last_read_row_number()_ method. The table below illustrates how the cells are numerated.
 
 |     | A | B | C | D | E | F |
 |:---:|:-:|:-:|:-:|:-:|:-:|:-:|
