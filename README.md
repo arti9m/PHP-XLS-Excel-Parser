@@ -208,7 +208,7 @@ After Workbook stream is accessed, the output encoding is set to _mb_internal_en
 
 After that, either the first non-empty worksheet will be selected and ready for parsing and all other sheets information will be available to the user, or some error will be created (for example, when no non-empty worksheet was found).
 
-By default, [Array parsing mode](#1-array-mode) is active.
+By default, [Array parsing mode](#parsing-modes) is active.
 
 Attempts to invoke a _Row-by-row_-mode related method that is suitable for _Array_ mode only (and vice versa) will create an error, disabling any further actions most of the time.
 
