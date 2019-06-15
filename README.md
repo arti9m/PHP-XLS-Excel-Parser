@@ -138,11 +138,11 @@ One advantage of Row-by-row mode is that it allowes many settings to be changed 
 ---
 ### Debug mode
 
-Debug mode enables output (echo) of all error and warning messages. To enable Debug mode, set the 2nd parameter to `true` in constructor:
+Debug mode enables output (echo) of all error and warning messages. To enable Debug mode, set the 2nd parameter to `true` in the [constructor](#4-constructor-and-destructor):
 ```PHP
 $file = new MSCFB("path_to_cfb_file.bin", true); // Show errors and warnings
 ```
-It is also possible to show errors from MSCFB helper class. To do this, set the 4th parameter to `true` in constructor:
+It is also possible to show errors from MSCFB helper class. To do this, set the 4th parameter to `true` in the [constructor](#4-constructor-and-destructor):
 ```PHP
 $file = new MSCFB("path_to_cfb_file.bin", true, null, true);
 ```
@@ -154,7 +154,7 @@ $file = new MSCFB("path_to_cfb_file.bin", true, null, true);
 
 If XLS file was saved as a Compound File (which is almost always the case), then MSXLS must use a temporary PHP stream resource to store Workbook stream that is extracted from the Compound File. It is stored either in memory or as a temporary file, depending on data size. By default, data that exceeds 2MiB (PHP's default value) is stored as a temporary file. XLS file may sometimes be stored as a Workbook stream itself, in which case a temporary file or stream is not needed and not created.
 
-You can control when a temporary file is used instead of memory by specifying the threshold in bytes as the 3rd parameter to constructor. If Workbook stream size (in bytes) is less than this value, it will be stored in memory.
+You can control when a temporary file is used instead of memory by specifying the threshold in bytes as the 3rd parameter to the [constructor](#4-constructor-and-destructor). If Workbook stream size (in bytes) is less than this value, it will be stored in memory.
 ```PHP
 $excel = new MSXLS("path_to_file.xls", false, 1024); //data with size > 1KiB is stored in a temp file
 ```
@@ -220,7 +220,7 @@ When a worksheet is parsed, you can select another worksheet for parsing (if any
 
 ### Properties
 
-__`(bool) $debug`__ — whether or not to display error and warning messages. Can be set as the 2nd parameter to constructor.
+__`(bool) $debug`__ — whether or not to display error and warning messages. Is set using the 2nd parameter to the [constructor](#4-constructor-and-destructor).
 
 __`(string) $err_msg`__ — a string that contains all error messages concatenated into one.
 
@@ -276,10 +276,10 @@ __`get_valid_sheets()`__ — same as above, but returns only non-empty selectabl
 __`get_active_sheet()`__ — returns currently selected sheet info in the same structure that `get_valid_sheets()` array consists of.
 
 ---
-__`get_filename()`__ — returns a file name string originally supplied to the constructor.
+__`get_filename()`__ — returns a file name string originally supplied to the [constructor](#4-constructor-and-destructor).
 
 ---
-__`get_filesize()`__ — returns size of the file supplied to the constructor (in bytes).
+__`get_filesize()`__ — returns size of the file supplied to the [constructor](#4-constructor-and-destructor) (in bytes).
 
 ---
 __`get_margins($which = 'all')`__ — returns currently set margins for the selected worksheet. Margins are set automatically when the sheet is selected. Margins can be set manually with `set_margins()` method. They define what rows and columns are read by `read_next_row()` method.
