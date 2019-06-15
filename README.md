@@ -102,7 +102,7 @@ When `$excel->read_everything()` is invoked for the first time for your file, a 
 In this mode, __empty rows and cells are ignored__. Boolean excel cells are parsed as _true_ or _false_. If excel internally represents a whole number as _float_ (which is often the case), it will be parsed as _float_ type.
 
 
-`$excel->cells` is a two-dimentional array. Its first dimension represents rows and its second dimension represents columns, both have zero-based numeration. See [Rows and columns numeration]('#rows-and-columns-numeration') for more information.
+`$excel->cells` is a two-dimentional array. Its first dimension represents rows and its second dimension represents columns, both have zero-based numeration. See [Rows and columns numeration](#rows-and-columns-numeration) for more information.
 
 
 Note that all empty rows and cells will create 'holes' in `$excel->cells` array, because empty cells are simply skipped. It is advisable to use `isset()` function to determine whether the cell is empty or not.
@@ -124,7 +124,7 @@ $excel->set_active_row($info['last_row']); //set active row to the last row of t
 $row = $excel->read_next_row(); //will read the last row of the sheet
 ```
 
-Cell numeration in the returned row is zero-based. See [Rows and columns numeration]('#rows-and-columns-numeration') for more information.
+Cell numeration in the returned row is zero-based. See [Rows and columns numeration](#rows-and-columns-numeration) for more information.
 
 When `$excel->read_next_row()` is invoked for the first time for your file, __SST map__ will be built which is a structure that contains file stream offsets for every unique string in your excel file. It is similar to __SST__ structure in Array mode, but __SST__ contains the strings themselves, while __SST map__ only contains addresses of those strings.
 
