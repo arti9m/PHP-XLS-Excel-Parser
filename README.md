@@ -392,7 +392,7 @@ __`__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)`__ 
 `$debug_MSCFB` — if evaluates to _true_, enables Debug mode in MSCFB helper class.
 
 ---
-__`__destruct()`__ — execute _free()_ method, thus closing all opened streams, deleting temporary files and erasing big structures.
+__`__destruct()`__ — execute `free()` method, thus closing all opened streams, deleting temporary files and erasing big structures.
 
 ---
 ## 6. Error handling
