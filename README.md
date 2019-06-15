@@ -369,9 +369,9 @@ __*$debug_MSCFB*__ — if evaluates to _true_, enables Debug mode in MSCFB helpe
 
 ## 6. Error handling
 
-Each time an _error_ occures, the script places an error code into _$error_ array property and appends an error message to _$err_msg_ string property. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. _Warnings_ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use _$warn_ property to store warning codes and _$warn_msg_ for warning texts.
+Each time an __error__ occures, the script places an error code into __*$error*__ array property and appends an error message to __*$err_msg*__ string property. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. __Warnings__ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use __*$warn*__ property to store warning codes and __*$warn_msg*__ for warning texts.
 
-If Debug mode is disabled, you should check if _$error_ property evaluates to _true_, which would mean that _$error_ array is not empty, i.e. has one or multiple error codes as its elements. Error handling example:
+If Debug mode is disabled, you should check if __*$error__ property evaluates to _true_, which would mean that __*$error*__ array is not empty, i.e. has one or multiple error codes as its elements. Error handling example:
 ```PHP
 $excel = new MSXLS('nofile.xls'); //Try to open non-existing file
 
