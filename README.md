@@ -369,11 +369,25 @@ __*$debug_MSCFB*__ — if evaluates to _true_, enables Debug mode in MSCFB helpe
 
 ## 6. Error handling
 
-Each time an _error_ occures, the script places an error code into `$excel->error` array and appends an error message to `this->err_msg`. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. _Warnings_ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use `$excel->warn` to store warning codes and `$excel->warn_msg` for warning texts.
+Each time an _error_ occures, the script places an error code into _$error_ array property and appends an error message to _$err_msg_ string property. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. _Warnings_ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use _$warn_ property to store warning codes and _$warn_msg_ for warning texts.
 
-If an error occurs in constructor and Debug mode is disabled, the user should check if `$excel->error` non-strictly evaluates to `true` (for example, `if($excel->error){ /*error processing here*/ }`, in which case error text can be read from `$excel->err_msg` and the most recent error code can be obtained as the last element of `$excel->error` array. Same applies to Warnings, which use `$excel->warn_msg` and `$excel->warn`, respectively.
+If Debug mode is disabled, you should check if _$error_ property evaluates to _true_, which would mean that _$error_ array is not empty, i.e. has one or multiple error codes as its elements. Error handling example:
+```PHP
+$excel = new MSXLS('nofile.xls'); //Try to open non-existing file
 
-If Debug mode is enabled, errors and warnings are printed (echoed) to standart output.
+if($excel->error){
+  var_dump(end($excel->error)); //Will output last error code
+  var_dump($excel->err_msg); //Will output all errors texts
+  die(); //Terminate script execution
+}
+
+if($excel->warn){
+  var_dump(end($excel->warn)); //Will output last warning code
+  var_dump($excel->warn_msg); //Will output all warnings texts
+}
+```
+
+If Debug mode is enabled, errors and warnings are printed (echoed) to standart output automatically.
 
 ## 7. Security considerations
 
@@ -381,7 +395,7 @@ There are extensive error checks in every function that should prevent any poten
 
 ## 8. Performance and memory
 
-The MSXLS class has been optimized for fast parsing and data extraction, while still performing error checks for safety. It is possible to marginally increase constructor performance by leaving those error checks out, but I would strongly advise against it, because if a specially crafted mallicious file is supplied, it becomes possible to cause a memory hog or an infinite loop.
+The MSXLS class has been optimized for fast parsing and data extraction, while still performing error checks for safety. It is possible to marginally increase performance by leaving those error checks out, but I would strongly advise against it, because if a specially crafted mallicious file is supplied, it becomes possible to cause a memory hog or an infinite loop.
 
 The following numbers were obtained on a Windows machine (AMD Phenom II x4 940), with a 97.0 MiB test XLS file (96.2 MiB Workbook stream) using WAMP server. XLS file consists entirely of unique strings.
 
@@ -393,8 +407,8 @@ The following numbers were obtained on a Windows machine (AMD Phenom II x4 940),
 | 54.71s |  82.9 MiB | 21.49s |  82.1 MiB | Open file, parse in __Row-by-row__ mode (don't save)
 |__PHP 5.6.25__ |__PHP 5.6.25__ |__PHP 7.0.10__ |__PHP 7.0.10__ |
 
-_Note:_ It took 1.65 seconds and 12.0 MiB of memory to parse a real-life XLS pricelist of 13051 entries in __Array__ mode in PHP 7.0.10. XLS file is 3.45 MiB in size.
+_Note:_ It took 1.65 seconds and 12.0 MiB of memory to parse a real-life XLS pricelist of 13051 entries in __Array__ mode in PHP 7.0.10. That XLS file was 3.45 MiB in size.
 
 ## 9. More documentation
 
-All the code in __MSXLS.php__ file is heavily commented, feel free to take a look at it. To understand how XLS file is structured, please refer to [MS documentation](https://docs.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/ "Open official Microsoft XLS file documentation on Microsoft website"), or to [OpenOffice.org's Documentation of MS Compound File](https://www.openoffice.org/sc/excelfileformat.pdf "Open OpenOffice.org's Documentation of the Microsoft Excel File Format (PDF)") (also provided as a PDF file in this repository).
+All code in __MSXLS.php__ file is heavily commented, feel free to take a look at it. To understand how XLS file is structured, please refer to [MS documentation](https://docs.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/ "Open official Microsoft XLS file documentation on Microsoft website"), or to [OpenOffice.org's Documentation of MS Compound File](https://www.openoffice.org/sc/excelfileformat.pdf "Open OpenOffice.org's Documentation of the Microsoft Excel File Format (PDF)") (also provided as a PDF file in this repository).
