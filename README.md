@@ -1,4 +1,4 @@
-# PHP-XLS-Excel-Parser
+# PHP XLS Excel Parser
 Probably, the fastest possible and the most efficient parser for XLS excel files for PHP!
 
 _Note:_ this parser works __only with older XLS files__ that were used in Microsoft Excel 95 (BIFF5) and 97-2003 (BIFF8).  
