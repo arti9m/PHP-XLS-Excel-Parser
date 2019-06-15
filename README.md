@@ -63,6 +63,7 @@ unset($excel);
 ## 3. Advanced usage
 _Note:_ every example in this section assumes that `$excel` is your MSXLS instance: `$excel = new MSXLS('file.xls')`.
 
+---
 ### Sheet selection
 If there is more than one worksheet in your file, and you want to parse the worksheet that is not the first valid non-empty worksheet, you will have to select your sheet manually. To do this, use `$excel->get_valid_sheets()` method to get an array with all available selectable worksheets. When the desired worksheet has been found, use its array index or _'number'_ entry as a parameter to `$excel->select_sheet($sheet)` method. For example:
 ```PHP
@@ -85,7 +86,7 @@ _Note:_ The first valid worksheet is selected automatically when the file is ope
 ---
 ### Parsing modes
 
-There are two modes which the parser can work in: __Array mode__ and __Row-by-row mode__. By default, Array mode is used.
+There are two modes which the parser can work in: __Array__ mode and __Row-by-row__ mode. By default, Array mode is used.
 
 #### 1. Array mode
 
