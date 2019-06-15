@@ -331,30 +331,29 @@ _set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
 
 ---
 #### Reading settings (mostly for Row-by-row mode)
-`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')` — setup how cells with excel errors are processed.
+__`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')`__ — setup how cells with excel errors are processed.
 
 If `$fill` evaluates to _true_, cells will be parsed as `$value`. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If `$value` is set to some other value, error cells will be parsed directly as `$value`. If `$fill` evaluates to _false_, cells with errors will be treated as empty cells.
 
 _Note:_ this is the only setting that also works in [Array mode](#1-array-mode).
 
 ---
-`set_margins($first_row = null, $last_row = null, $first_col = null, $last_col = null)` — sets first row, last row, first column and last column that are parsed. If a parameter is _null_ or left out, the corresponding margin is not changed. If a parameter is _-1_, the corresponding margin is set to the default value. The default values correspond to the first/last non-empty row/column in a worksheet.
+__`set_margins($first_row = null, $last_row = null, $first_col = null, $last_col = null)`__ — sets first row, last row, first column and last column that are parsed. If a parameter is _null_ or left out, the corresponding margin is not changed. If a parameter is _-1_, the corresponding margin is set to the default value. The default values correspond to the first/last non-empty row/column in a worksheet.
 
----
-`set_active_row($row_number)` — set which row to read next.  
+__`set_active_row($row_number)`__ — set which row to read next.  
 `$row_number` is zero-based excel row number and it must not be out of bounds set by _set_margins()_ method.
 
----
-`last_read_row_number()` — returns most recently parsed row number. Valid only if called immediately after _read_next_row()_.
+__`last_read_row_number()`__ — returns most recently parsed row number. Valid only if called immediately after _read_next_row()_.
 
-`next_row_number()` — returns row number that is to be parsed upon next call of _read_next_row()_.  
+__`next_row_number()`__ — returns row number that is to be parsed upon next call of _read_next_row()_.  
 Returns _-1_ if there is no more rows left to parse.
 
-`set_empty_value($value = null)` — set `$value` as _empty value_, a value which is used to parse empty cells as.
+__`set_empty_value($value = null)`__ — set `$value` as _empty value_, a value which is used to parse empty cells as.
 
-`use_empty_cols($set = false)` — whether or not to parse empty columns to _empty value_.
+__`use_empty_cols($set = false)`__ — whether or not to parse empty columns to _empty value_.
 
-`use_empty_rows($set = false)` — whether or not to parse empty rows.  
+__`use_empty_rows($set = false)`__ — whether or not to parse empty rows.
+
 _Note:_ if empty columns parsing is disabled (it is disabled by default), _read_next_row()_ will return _-1_ when an empty row is encountered. If empty columns parsing is enabled with _use_empty_cols(true)_, it will return array of cells filled with _empty value_.
 
 __`set_boolean_values($true = true, $false = false)`__ — set values which excel boolean cells are parsed as. By default, TRUE cells are parsed as PHP _true_ value, FALSE cells are parsed as PHP _false_ value.
