@@ -381,19 +381,20 @@ __`set_float_to_int($tf = false)`__ — whether or not to parse excel cells with
 
 ---
 #### 4. Constructor and destructor
-`__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` — open file, extract Workbook stream (or use the file as Workbook stream), execute _set_output_encoding()_ and _get_data()_ methods.
+__`__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)`__ — open file, extract Workbook stream (or use the file as Workbook stream), execute `set_output_encoding()` and `get_data()` methods.
 
-__*$filename*__ — path to XLS file.
+`$filename` — path to XLS file.
 
-__*$debug*__ — if evaluates to _true_, enables [Debug mode](#debug-mode). 
+`$debug` — if evaluates to _true_, enables [Debug mode](#debug-mode). 
 
-__*$mem*__ — sets memory limit for [temporary memory streams vs temporary files](#temporary-files-and-memory "Temporary files and memory").
+`$mem` — sets memory limit for [temporary memory streams vs temporary files](#temporary-files-and-memory "Temporary files and memory").
 
-__*$debug_MSCFB*__ — if evaluates to _true_, enables Debug mode in MSCFB helper class.
+`$debug_MSCFB` — if evaluates to _true_, enables Debug mode in MSCFB helper class.
 
 ---
-`__destruct()` — execute _free()_ method, thus closing all opened streams, deleting temporary files and erasing big structures.
+__`__destruct()`__ — execute _free()_ method, thus closing all opened streams, deleting temporary files and erasing big structures.
 
+---
 ## 6. Error handling
 
 Each time an __error__ occures, the script places an error code into `$error` array property and appends an error message to `$err_msg` string property. If an error occures, it prevents execution of parts of the script that depend on successful execution of the part where the error occured. __Warnings__ work similarly to errors except they do not prevent execution of other parts of the script, because they always occur in non-critical places. Warnings use `$warn` property to store warning codes and `$warn_msg` for warning texts.
