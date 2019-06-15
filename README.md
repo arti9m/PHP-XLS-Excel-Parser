@@ -200,7 +200,7 @@ Excel keeps track of cells starting with first non-empty row and non-empty colum
 
 ### What happens when I open XLS file
 
-_Note:_ during every stage extensive error checking is performed. See [Error handling](#error-handling) for more info.
+_Note:_ during every stage extensive error checking is performed. See [Error handling](#6-error-handling) for more info.
 
 When a user opens XLS file, for example by executing `$excel = new MSXLS('file.xls')`, first thing happens is the script checks whether XLS file is stored as a Compound File (most of the time it is) or as a Workbook stream. If it is a Compound File, the script attempts to extract Workbook stream to a temporary file and use that file in the future for all operations. Otherwise, it will directly use the supplied XLS file. The script never opens the supplied XLS file for writing.
 
@@ -220,7 +220,7 @@ After a worksheet is parsed, you can select another worksheet for parsing (if an
 
 ### Properties
 
-__`(bool) $debug`__ — whether or not to display error and warning messages. Is set using the 2nd parameter to the [constructor](#4-constructor-and-destructor).
+__`(bool) $debug`__ — whether or not to display error and warning messages. Set as the 2nd parameter to the [constructor](#4-constructor-and-destructor).
 
 __`(string) $err_msg`__ — a string that contains all error messages concatenated into one.
 
