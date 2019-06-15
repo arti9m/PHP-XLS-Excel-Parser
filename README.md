@@ -397,12 +397,12 @@ The MSXLS class has been optimized for fast parsing and data extraction, while s
 
 The following numbers were obtained on a Windows machine (AMD Phenom II x4 940), with a 97.0MiB test XLS file (96.2MiB Workbook stream) using WAMP server. XLS file consists entirely of unique strings.
 
-| Time, s | Memory, MiB | Time, s | Memory, MiB | Action | 
+| Time | Memory | Time, s | Memory, MiB | Action | 
 |:-:|:-:|:-:|:-:|---|
-| 7.52  | 1.0     | 3.48  | 0.6  | Open XLS File (create MSXLS instance)
-| 77.77 | 213.2 | 16.41 | 128.8 | Open XLS File and parse in __Array__ mode
-| 91.08  | 192.2 | 27.2 | 204.3 | Open file, parse in __Row-by-row__ mode to variable
-| 54.71  | 82.9 | 21.49 s | 82.1 | Open file, parse in __Row-by-row__ mode (don't save)
+| 7.52s  | 1.0MiB     | 3.48  | 0.6  | Open XLS File (create MSXLS instance)
+| 77.77s | 213.2MiB | 16.41 | 128.8 | Open XLS File and parse in __Array__ mode
+| 91.08 s  | 192.2 MiB| 27.2 | 204.3 | Open file, parse in __Row-by-row__ mode to variable
+| 54.71 s  | 82.9 MiB| 21.49 | 82.1 | Open file, parse in __Row-by-row__ mode (don't save)
 |__PHP 5.6.25__ |__PHP 5.6.25__ |__PHP 7.0.10__ |__PHP 7.0.10__ |
 
 _Note:_ It took 1.65 seconds and 12.0 MiB of memory to parse a real-life XLS pricelist of 13051 entries in __Array__ mode in PHP 7.0.10. XLS file is 3.45 MiB in size.
