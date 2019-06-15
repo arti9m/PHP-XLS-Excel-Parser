@@ -90,40 +90,33 @@ There are two modes which the parser can work in: __Array__ mode and __Row-by-ro
 
 #### 1. Array mode
 
-This mode lets you read all cells at once into `$excel->cells` array property. It is designed to read all available data as fast as possible when no additional cells processing needed. This mode is used by default. This mode can be selected with `$excel->switch_to_array()` method. Data is read with `$excel->read_everything()` method into `$excel->cells` array property. Example:
+This mode lets you read all cells at once into `$excel->cells` array property. It is designed to read all available data as fast as possible when no additional cells processing is needed. This mode is used by default. This mode can be selected with `$excel->switch_to_array()` method. Data is read with `$excel->read_everything()` method into `$excel->cells` array property. Example:
 ```PHP
-$excel = new MSXLS('path_to_file.xls'); // Open XLS file
-$excel->read_everything(); // Read cells into $excel->cells
-var_dump($excel->cells); // Output all parsed cells from XLS file
+$excel->read_everything(); //Read cells into $excel->cells
+var_dump($excel->cells); //Output all parsed cells from XLS file
 ```
 
-When `$excel->read_everything()` is invoked for the first time for your file, a private structure called __SST__ is built which contains all strings for all worksheets. It sits in memory until Parsing mode is changed or re-selected, or `$excel->free()` called, or your MSXLS instance (`$excel` variable in the examples here) had been destroyed. Therefore, it is rather memory-hungry mode if your file has a lot of unique strings. Non-unique strings are stored only once. Also, PHP is smart enough not to duplicate those strings in memory when a string is read into `$excel->cells` array from __SST__ storage.
+When `$excel->read_everything()` is invoked for the first time for your file, a private structure called __SST__ is built which contains all strings for all worksheets. It sits in memory until Parsing mode is changed or re-selected, or `$excel->free()` is called, or your MSXLS instance is destroyed. Therefore, it is rather memory-hungry mode if your file has a lot of unique strings. Non-unique strings are stored only once. Also, PHP is usually smart enough not to duplicate those strings in memory when a string is read into `$excel->cells` array from __SST__ storage, or when you copy `$excel->cells` to some other variable.
 
 
-In this mode, __empty rows and cells are ignored__. Boolean excel cells are parsed as `true` or `false`. If excel internally represents a whole number as _float_ (which is often the case), it will be parsed as _float_ without changes.
+In this mode, __empty rows and cells are ignored__. Boolean excel cells are parsed as _true_ or _false_. If excel internally represents a whole number as _float_ (which is often the case), it will be parsed as _float_ type.
 
 
-`$excel->cells` array first key is _zero based_ excel row number. For example, `$excel->cells[0]` will return an array of cells of excel row 1 (provided it is not empty). If your first populated row number in excel is 5, the first entry of `$excel->cells` will have index of 4.
-
-
-`$excel->cells` array second key is _zero based_ excel column number. For example, `$excel->cells[0][3]` will return 'D' cell of the first row (cell `D1`), provided it is not empty.
+`$excel->cells` is a two-dimentional array. Its first dimension represents rows and its second dimension represents columns, both have zero-based numeration. See [Rows and columns numeration]('#rows-and-columns-numeration') for more information.
 
 
 Note that all empty rows and cells will create 'holes' in `$excel->cells` array, because empty cells are simply skipped. It is advisable to use `isset()` function to determine whether the cell is empty or not.
 
 
-Array mode has only one additional setting for parsing: `$excel->set_fill_xl_errors($fill = false, $value = '#DEFAULT!')`, which defines whether or not to process excel cells with error values (such as #DIV/0!). Please refer to __*Public properties and methods*__ section for more information. In short, if `$fill` is `false`, error cells are skipped, otherwise they are filled with `$value`.
+Array mode has only one additional setting for parsing: `$excel->set_fill_xl_errors($fill, $value)`, which defines whether or not to process excel cells with error values (such as division by zero). Please refer to [Methods (functions)](#methods-functions) subsection for more information. In short, if `$fill` is `false`, error cells are skipped, otherwise they are filled with `$value`.
 
 #### 2. Row-by-row mode
 
-This mode lets you read cells row by row. It is designed to let you process each row individually with using only necessary amount of memory. This mode is selected with `$excel->switch_to_row()` method. Data is read with `$excel->read_next_row()` method, which returns a single row as an array of cells.
+This mode lets you read the cells row by row. It is designed to let you process each row individually while using as little memory as possible. This mode is selected with `$excel->switch_to_row()` method. Data is read with `$excel->read_next_row()` method, which returns a single row as an array of cells.
 
 
-As the method name implies, row number is advanced automatically, so next time you call `$excel->read_next_row()` method, it will read the next row. This method returns `null` if there are no more rows to read. You can manually set row number to read with `$excel->set_active_row($row_number)`, where `$row_number` is a valid zero-based excel row number. You can get the first and the last valid row number with `$excel->get_active_sheet()` method:
+As the method name implies, row number is advanced automatically, so next time you call `$excel->read_next_row()`, it will read the next row. This method returns _null_ if there are no more rows to read. You can manually set row number to read with `$excel->set_active_row($row_number)`, where `$row_number` is a valid zero-based excel row number. You can get the first and the last valid row number with `$excel->get_active_sheet()` method:
 ```PHP
-$excel = new MSXLS('path_to_file.xls'); // Open XLS file
-$excel->switch_to_row(); // Switch mode to Row-by-row
-
 $info = $excel->get_active_sheet(); //get selected sheet info
 var_dump($info['first_row']); //displays first valid zero-based row index
 var_dump($info['last_row']); //displays last valid zero-based row index
@@ -131,12 +124,7 @@ $excel->set_active_row($info['last_row']); //set active row to the last row of t
 $row = $excel->read_next_row(); //will read the last row of the sheet
 ```
 
-The cell numbers in the returned row are _zero based_. Example:
-
-```PHP
-$row = $excel->read_next_row(); //$row now contains parsed cells from a single row
-var_dump($row[0], $row[2]); //will output cell 'A' and cell 'C'
-```
+Cell numeration in the returned row is zero-based. See [Rows and columns numeration]('#rows-and-columns-numeration') for more information.
 
 When `$excel->read_next_row()` is invoked for the first time for your file, __SST map__ will be built which is a structure that contains file stream offsets for every unique string in your excel file. It is similar to __SST__ structure in Array mode, but __SST__ contains the strings themselves, while __SST map__ only contains addresses of those strings.
 
@@ -145,7 +133,7 @@ When `$excel->read_next_row()` is invoked for the first time for selected sheet,
 
 Both of the structures mentioned above will be destroyed if Parsing mode is changed or re-selected, or if `$excel->free()` is called, or when your MSXLS instance is destroyed. Additionally, __Rows map__ will be destroyed when `$excel->select_sheet()` is called, because __Rows map__ is only valid for a selected sheet, unlike __SST map__, which is relevant for the whole file.
 
-The main difference of Row-by-row mode is that it allowes many settings to be changed that affect which cells are proccessed and how. Please refer to __*Public properties and methods*__ section for more information. Methods that are relevant to Row-by-row mode settings are marked with __\[Row-by-row\]__ string.
+One advantage of Row-by-row mode is that it allowes many settings to be changed that affect which cells are proccessed and how. Please refer to [Reading settings](#reading-settings-mostly-for-row-by-row-mode) part of [Methods (functions)](#methods-functions) subsection for more information.
 
 ---
 ### Debug mode
