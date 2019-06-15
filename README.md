@@ -235,7 +235,7 @@ __`(array) $cells`__ — two-dimensional array which is used as storage for cell
 ### Methods (functions)
 
 ---
-#### General
+#### - General
 
 __`get_data()`__ — Checks XLS file for errors and encryption, gathers information such as CODEPAGE for BIFF5, SST location for BIFF8. Gathers information about all sheets in the file. Also executes `select_sheet()` to select first valid worksheet for parsing. This method is called automatically when XLS file is opened. Invoking it manually makes sence only if BIFF5 codepage was detected incorrectly and you cannot see sheet names (and you really need them). In this case, encoding settings must be configured with `set_encodings()` after file opening and `get_data()` should be called manually after it. 
 
@@ -323,7 +323,7 @@ __`read_everything()`__ — read all cells from XLS file into `$cells` property.
 __`read_next_row()`__ — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
 
 ---
-#### Memory free-ers
+#### - Memory free-ers
 __`free_stream()`__ — Close Workbook stream, free memory associated with it and delete temporary files.
 
 __`free_cells()`__ — re-initialize `$cells` array property (storage for [Array mode](#1-array-mode)).
@@ -340,7 +340,7 @@ __`free($stream = true)`__ — free memory by executing all "free"-related metho
 `free_stream()` is called only if `$stream` parameter evaluates to _true_.
 
 ---
-#### Reading settings (mostly for Row-by-row mode)
+#### - Reading settings (mostly for Row-by-row mode)
 __`set_fill_xl_errors($fill = false, $value = '#DEFAULT!')`__ — setup how cells with excel errors are processed.
 
 If `$fill` evaluates to _true_, cells will be parsed as `$value`. _'#DEFAULT!'_ value is special as it will expand to actual excel error value. For example, if a cell has a number divided by zero, it will be parsed as _#DIV/0!_ string. If `$value` is set to some other value, error cells will be parsed directly as `$value`. If `$fill` evaluates to _false_, cells with errors will be treated as empty cells.
@@ -380,7 +380,7 @@ __`set_boolean_values($true = true, $false = false)`__ — set values which exce
 __`set_float_to_int($tf = false)`__ — whether or not to parse excel cells with whole float numbers to integers. Often whole numbers are stored as float internally in XLS file, and by default they are parsed as floats. This setting allows to parse such numbers as integer type. Note: cells with numbers internally stored as integers are always parsed as integers.
 
 ---
-#### Constructor and destructor
+#### - Constructor and destructor
 `__construct($filename, $debug = false, $mem = null, $debug_MSCFB = false)` — open file, extract Workbook stream (or use the file as Workbook stream), execute _set_output_encoding()_ and _get_data()_ methods.
 
 __*$filename*__ — path to XLS file.
