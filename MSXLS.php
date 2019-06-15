@@ -83,6 +83,7 @@ class MSXLS{
   const SH_OUB_LC = 45;
   const E_NOBOF = 46;
   const E_NOWBSTREAM = 47;
+  const E_MSCFB = 48;
   
   
 
@@ -142,6 +143,7 @@ class MSXLS{
   self::SH_OUB_LC => 'Last column out of bounds!',
   self::E_NOBOF => 'BOF record must be the first record in a Workbook stream but it is not!',
   self::E_NOWBSTREAM => 'No "Workbook" or "Book" stream found in XLS file! File is invalid!',
+  self::E_MSCFB => 'MSCFB class is not defined! Forgot to put MSCFB.php in your directory?',
   );
 
   private $stream = null; // stream handle: either file itself or a temporary stream
@@ -2531,6 +2533,11 @@ class MSXLS{
 
   function __construct($filename, $debug = false, $mem = null, $debug_MSCFB = false){
     $this->debug = (bool) $debug;
+    
+    if(!class_exists('MSCFB')){
+      $this->gen_err(self::E_MSCFB,__FUNCTION__);
+      return;      
+    }
 
     if(!file_exists($filename)){
       $this->gen_err(self::E_NOFILE,__FUNCTION__);
