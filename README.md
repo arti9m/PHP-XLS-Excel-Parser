@@ -1,3 +1,6 @@
+
+
+
 # PHP-XLS-Excel-Parser
 Probably, the fastest possible and the most efficient parser for XLS excel files for PHP!
 
@@ -183,8 +186,17 @@ _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 ## 4. How it works
 
 ### Rows and columns numeration
+Rows and columns numeration in this parser is zero-based. Excel row numeration is numeric and starts from _1_, and column numeration is alphabetical and starts with _A_. Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is two-dimensional array. The 1st dimension is the row number, and the 2nd one is the column number. In __Row-by-row__ mode a single row is returned as an array of cells. If `$row` contains a row returned by _read_next_row()_, Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, user can get zero-based row number with _last_read_row_number()_ method. The table below illustrates how the cells are numerated.
 
-Unlike excel, rows and columns enumeration in this parser is zero-based, whereas in excel row numeration is numeric and starts from 1 (1, 2, 3, 4, 5 ...), and column numeration is alphabetical and starts with A (A, B, C, D, E, ... AA, AB, AC ...). Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is two-dimensional array. The 1st dimension is the row number, and the 2nd one is the column number. So, A1 will become `$cells[0][0]`, A3 — `$cells[2][0]`, B5 — `$cells[4][1]`, C10 — `$cells[9][2]`, and so on. In __Row-by-row__ mode a single row is returned (for example, _$row_). It is a simple array of cells. Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, user can get zero-based row number with _last_read_row_number()_ method.
+|     | A | B | C | D | E | F |
+|:---:|:-:|:-:|:-:|:-:|:-:|:-:|
+|__1__| `$cells[0][0]`| `$cells[0][1]`| `$cells[0][2]`| `$cells[0][3]`| `$cells[0][4]`| `$cells[0][5]`|
+|__2__| `$cells[1][0]`| `$cells[1][1]`| `$cells[1][2]`| `$cells[1][3]`| `$cells[1][4]`| `$cells[1][5]`|
+|__3__| `$cells[2][0]`| `$cells[2][1]`| `$cells[2][2]`| `$cells[2][3]`| `$cells[2][4]`| `$cells[2][5]`|
+|__4__| `$cells[3][0]`| `$cells[3][1]`| `$cells[3][2]`| `$cells[3][3]`| `$cells[3][4]`| `$cells[3][5]`|
+|__5__| `$cells[4][0]`| `$cells[4][1]`| `$cells[4][2]`| `$cells[4][3]`| `$cells[4][4]`| `$cells[4][5]`|
+|...|
+|__row__| `$row[0]`| `$row[1]`| `$row[2]`| `$row[3]`| `$row[4]`| `$row[5]`|
 
 ### Some terms
 
@@ -383,20 +395,18 @@ There are extensive error checks in every function that should prevent any poten
 
 The MSXLS class has been optimized for fast parsing and data extraction, while still performing error checks for safety. It is possible to marginally increase constructor performance by leaving those error checks out, but I would strongly advise against it, because if a specially crafted mallicious file is supplied, it becomes possible to cause a memory hog or an infinite loop.
 
-The following numbers were obtained on a Windows machine (AMD Phenom II x4 940), with a 97.0MiB test XLS file (96.2MiB Workbook stream) using WAMP server. XLS file entirely consists of unique strings.
+The following numbers were obtained on a Windows machine (AMD Phenom II x4 940), with a 97.0MiB test XLS file (96.2MiB Workbook stream) using WAMP server. XLS file consists entirely of unique strings.
 
-```
-  Time   Memory     Time   Memory
-  
- - Open XLS file and parse its structure
- - Extract cells (Array mode)
- - Extract cells (Row-by-row, save extracted data to array)
- - Extract cells (Row-by-row, don't save extracted data)
- 
-  5.6.25 32-bit |  7.0.10 64-bit  - PHP Version
-```
+| Time, s | Memory, MiB | Time, s | Memory, MiB | Action | 
+|:-:|:-:|:-:|:-:|---|
+| 7.52  | 1.0     | 3.48  | 0.6  | Open XLS File (create MSXLS instance)
+| 77.77 | 213.2 | 16.41 | 128.8 | Open XLS File and parse in __Array__ mode
+| 91.08  | 192.2 | 27.2 | 204.3 | Open file, parse in __Row-by-row__ mode to variable
+| 54.71  | 82.9 | 21.49 s | 82.1 | Open file, parse in __Row-by-row__ mode (don't save)
+|__PHP 5.6.25__ |__PHP 5.6.25__ |__PHP 7.0.10__ |__PHP 7.0.10__ |
+
+_Note:_ It took 1.65 seconds and 12.0 MiB of memory to parse a real-life XLS pricelist of 13051 entries in __Array__ mode in PHP 7.0.10. XLS file is 3.45 MiB in size.
 
 ## 9. More documentation
 
-All the code in __MSXLS.php__ file is heavily commented, feel free to take a look it. To understand how XLS file is structured, please refer to [MS documentation](https://docs.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/ "Open official Microsoft XLS file documentation on Microsoft website"), or to [OpenOffice.org's Documentation of MS Compound File](https://www.openoffice.org/sc/excelfileformat.pdf "Open OpenOffice.org's Documentation of the Microsoft Excel File Format (PDF)") (also provided as a PDF file in this repository).
-
+All the code in __MSXLS.php__ file is heavily commented, feel free to take a look at it. To understand how XLS file is structured, please refer to [MS documentation](https://docs.microsoft.com/en-us/openspecs/office_file_formats/ms-xls/ "Open official Microsoft XLS file documentation on Microsoft website"), or to [OpenOffice.org's Documentation of MS Compound File](https://www.openoffice.org/sc/excelfileformat.pdf "Open OpenOffice.org's Documentation of the Microsoft Excel File Format (PDF)") (also provided as a PDF file in this repository).
