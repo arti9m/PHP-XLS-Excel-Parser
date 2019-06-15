@@ -25,7 +25,7 @@ require_once 'MSXLS.php'; //MSCFB.php is 'required once' inside MSXLS.php
 $excel = new MSXLS('path_to_file.xls');
 ```
 
-5. If no errors occured up to this point, you are ready to read the cells from your file. There are two ways you can do it: either read all cells at once into a two-dimensional array using [Array mode](#array-mode "Array mode description") (faster), or read the cells in [Row-by-row mode](#row-by-row-mode "Row-by-row mode description"), which is slower, but is more configurable, suitable for database upload and may use much less memory depending on usage scenario.  
+5. If no errors occured up to this point, you are ready to read the cells from your file. There are two ways you can do it: either read all cells at once into a two-dimensional array using [Array mode](#1-array-mode "Array mode description") (faster), or read the cells in [Row-by-row mode](#2-row-by-row-mode "Row-by-row mode description"), which is slower, but is more configurable, suitable for database upload and may use much less memory depending on usage scenario.  
 In any case, it's a good idea to check for errors before trying to read anything:
 
 ```PHP
@@ -52,7 +52,7 @@ while($row = $excel->read_next_row()){
 }
 ```
 
-_Note:_ `$excel->cells` will be erased when `$excel->switch_to_row()` is executed, so make sure you save the contents of `$excel->cells` (if any) to some other variable before switching to [Row-by-row mode](#row-by-row-mode). If you need to switch back to [Array mode](#array-mode), use `$excel->switch_to_array()` method.
+_Note:_ `$excel->cells` will be erased when `$excel->switch_to_row()` is executed, so make sure you save the contents of `$excel->cells` (if any) to some other variable before switching to [Row-by-row mode](#2-row-by-row-mode). If you need to switch back to [Array mode](#1-array-mode), use `$excel->switch_to_array()` method.
 
 8. If you need to perform some other memory-intensive tasks in the same script, it is a good idea to free some memory:
 ```PHP
