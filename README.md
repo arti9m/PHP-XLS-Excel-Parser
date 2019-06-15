@@ -1,18 +1,21 @@
 # PHP-XLS-Excel-Parser
 Probably, the fastest possible and the most efficient parser for XLS excel files for PHP!
 
-_Note:_ this parser works __only with older XLS files__ that were used in Microsoft Excel 95 (BIFF5) and 97-2003 (BIFF8). It will not work with the newer ones, XLSX!
+_Note:_ this parser works __only with older XLS files__ that were used in Microsoft Excel 95 (BIFF5) and 97-2003 (BIFF8).  
+It will not work with the newer ones, XLSX!
 
 ## 1. Requirements
 
-At least __PHP 5.6__ 32-bit is required. Untested with PHP versions prior to 5.6. Works best with PHP 7.x 64-bit (faster, more memory efficient than PHP 5.6).
+At least __PHP 5.6__ 32-bit is required. Untested with PHP versions prior to 5.6.  
+Works best with PHP 7.x 64-bit (faster, more memory efficient than PHP 5.6).
+
 
 Also, this parser uses my [PHP MSCFB Parser](https://github.com/arti9m/PHP-MSCFB-Parser). Grab a copy of __MSCFB.php__ if you don't have one here: https://github.com/arti9m/PHP-MSCFB-Parser and put it in your PHP include directory or in the same directory where __MSXLS.php__ is. MSCFB is "required-once" inside MSXLS, so there's no need to include/require it manually.
 
 ## 2. Basic usage
 
 1. Download __MSXLS.php__ from this repository and put it in your include directory or in the same directory where your script is.
-2. Make sure that __MSCFB.php__ is in your include directory or in the same directory as MSXLS.php.
+2. Make sure that __MSCFB.php__ is in your include directory or in your script directory.
 3. Add the following line to the beginning of your PHP script (specify full path to MSXLS.php, if needed):
 ```PHP
 require_once 'MSXLS.php'; //MSCFB.php is 'required once' inside MSXLS.php
@@ -22,15 +25,14 @@ require_once 'MSXLS.php'; //MSCFB.php is 'required once' inside MSXLS.php
 $excel = new MSXLS('path_to_file.xls');
 ```
 
-5. If no errors occured up to this point, you are ready to read the cells from your file. There are two ways you can do it: either read all cells at once into a two-dimensional array using [Array mode](#array-mode, "Array mode description") (faster), or read the cells in [Row-by-row mode](#row-by-row-mode, "Row-by-row mode description"), which is slower, but is more configurable, suitable for database upload and may use much less memory, depending on usage scenario.
-
-In any case, it's a good idea to check for errors first before reading anything:
+5. If no errors occured up to this point, you are ready to read the cells from your file. There are two ways you can do it: either read all cells at once into a two-dimensional array using [Array mode](#array-mode "Array mode description") (faster), or read the cells in [Row-by-row mode](#row-by-row-mode "Row-by-row mode description"), which is slower, but is more configurable, suitable for database upload and may use much less memory depending on usage scenario.  
+In any case, it's a good idea to check for errors before trying to read anything:
 
 ```PHP
 if($excel->error) die($excel->err_msg); //Terminate script execution, show error message.
 ```
 
-6. Read all cells into a two-dimensional array:
+6. You can read all cells at once into a two-dimensional array:
 ```PHP
 $excel->read_everything(); //Read cells into $excel->cells
 ```
@@ -39,7 +41,7 @@ At this point all your cells data is contained inside `$excel->cells` array:
 var_dump($excel->cells); //Output all parsed cells from XLS file
 ```
 
-7. Read all cells row by row:
+7. Or you can read the cells row by row:
 ```PHP
 $excel->switch_to_row(); //switch to Row-by-row mode
 
@@ -50,7 +52,7 @@ while($row = $excel->read_next_row()){
 }
 ```
 
-_Note:_ `$excel->cells` will be erased when `$excel->switch_to_row()` is executed, so make sure you save all the data you need before switching to [Row-by-row mode](#row-by-row-mode). If you need to switch back to [Array mode](#array-mode), use `$excel->switch_to_array()` method.
+_Note:_ `$excel->cells` will be erased when `$excel->switch_to_row()` is executed, so make sure you save the contents of `$excel->cells` (if any) to some other variable before switching to [Row-by-row mode](#row-by-row-mode). If you need to switch back to [Array mode](#array-mode), use `$excel->switch_to_array()` method.
 
 8. If you need to perform some other memory-intensive tasks in the same script, it is a good idea to free some memory:
 ```PHP
