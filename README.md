@@ -192,29 +192,29 @@ A __Compound File__, or Microsoft Binary Compound File, is a special file format
 
 __Workbook stream__, or just __Workbook__ is a binary bytestream that essentially represents excel BIFF file.
 
-Excel file format is known as __BIFF__, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called _SST_ (Shared Strings Table), which stores unique strings inside itself in UTF16 little-endian encoding, and reference to SST entry is stored in cell.
+Excel file format is known as __BIFF__, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called __SST__ (_Shared Strings Table_), which stores unique strings inside itself in UTF16 little-endian encoding, and a reference to SST entry is stored in a cell.
 
-Workbook stream consists of _Workbook Globals_ substream and one or more _Sheet_ substreams. __Workbook Globals__ contains information about the file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or __Sheets__ represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
+Workbook stream consists of __Workbook Globals__ substream and one or more __Sheet__ substreams. __Workbook Globals__ contains information about the file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or __Sheets__ represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
 
 Excel keeps track of cells starting with first non-empty row and non-empty column, ending with last non-empty row and non-empty column. All other cells are completely ignored by this parser like they don't exist at all.
 
 ### What happens when I open XLS file
 
-Note: during every stage extensive error checking is performed. See [Error handling](#error-handling) for more info.
+_Note:_ during every stage extensive error checking is performed. See [Error handling](#error-handling) for more info.
 
-When a user opens XLS file, for example by executing `$excel = new MSXLS('file.xls');`, first thing happens is the script checks whether XLS file is stored as a Compound File (most of the time it is) or as a Workbook stream. If it is a Compound File, the script attempts to extract Workbook stream to a temporary file and use that file in the future for all operations. Otherwise, it will directly use the supplied XLS file. The script never opens the supplied XLS file for writing.
+When a user opens XLS file, for example by executing `$excel = new MSXLS('file.xls')`, first thing happens is the script checks whether XLS file is stored as a Compound File (most of the time it is) or as a Workbook stream. If it is a Compound File, the script attempts to extract Workbook stream to a temporary file and use that file in the future for all operations. Otherwise, it will directly use the supplied XLS file. The script never opens the supplied XLS file for writing.
 
-After Workbook stream is accessed, the output encoding is set to _mb_internal_encoding()_ return value. Then _get_data()_ is executed: the script extracts information such as sheets count, codepage, sheets byte offsets, etc.
+After Workbook stream is accessed, the output encoding is set to _mb_internal_encoding()_ return value. Then `get_data()` method is executed: the script extracts information such as sheet count, codepage, sheets byte offsets, etc.
 
 After that, either the first non-empty worksheet will be selected and ready for parsing and all other sheets information will be available to the user, or some error will be created (for example, when no non-empty worksheet was found).
 
-By default, __Array__ parsing mode is active.
+By default, [Array parsing mode](#1-array-mode) is active.
 
-Attempts to invoke a __Row-by-row__ related method that is suitable for __Array__ mode only (and vice versa) will create an error, disabling any further actions most of the time.
+Attempts to invoke a _Row-by-row_-mode related method that is suitable for _Array_ mode only (and vice versa) will create an error, disabling any further actions most of the time.
 
-If no errors occured, it is now possible to select and setup parsing mode.
+If no errors occured, it is now possible to select and [setup parsing mode](#3-reading-settings-mostly-for-row-by-row-mode).
 
-When a worksheet is parsed, you can select another worksheet for parsing (if any) with _select_sheet()_ method. When you are finished parsing a file, it is a good idea to clean up, especially if something else is going on in your script later on. `$excel->free()` method and `unset($excel)` function called one after another is the best way to do it.
+After a worksheet is parsed, you can select another worksheet for parsing (if any) with `select_sheet()` method. When you are finished parsing a file, it is a good idea to free memory manually, especially if something else is going on in your script later on. `free()` method and _unset()_ function called one after another is the best way to do it.
 
 ## 5. Public properties and methods
 
