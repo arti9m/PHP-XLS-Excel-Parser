@@ -296,7 +296,8 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell record in Work
 `set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to.  
 `$enc` is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` function will be used.
 
-_Note:_ Setting `$to` parameter in _set_encodings()_ and using _set_output_encoding()_ do the same thing.   _set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
+_Note:_ Setting `$to` parameter in _set_encodings()_ and using _set_output_encoding()_ do the same thing.  
+_set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
 
 ---
 `select_sheet($sheet = -1)` — Select a worksheet to read data from.
@@ -316,17 +317,17 @@ _Note:_ Setting `$to` parameter in _set_encodings()_ and using _set_output_encod
 #### Memory free-ers
 `free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
 
-`free_cells()` — re-initialize _cells_ array storage (parsed cell data from __Array__ mode).
+`free_cells()` — re-initialize _$cells_ array property (storage for [Array mode](#1-array-mode)).
 
-`free_sst()` — re-initialize SST structure (Shared Strings Table from __Array__ mode).
+`free_sst()` — re-initialize SST structure (Shared Strings Table, used by [Array mode](#1-array-mode)).
 
-`free_rows_map()` — re-initialize rows map storage used for __Row-by-row__ mode.
+`free_rows_map()` — re-initialize rows map storage used by [Row-by-row mode](#2-row-by-row-mode).
 
-`free_sst_maps()` — re-initialize SST offsets map and SST lengths storage used for __Row-by-row__ mode.
+`free_sst_maps()` — re-initialize SST offsets map and SST lengths storage used by [Row-by-row mode](#2-row-by-row-mode).
 
 `free_maps()` — execute both _free_row_map()_ and _free_sst_maps()_.
 
-`free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if __*$stream*__ evaluates to _true_.
+`free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if `$stream` parameter evaluates to _true_.
 
 ---
 #### Reading settings (mostly for Row-by-row mode)
