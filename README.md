@@ -133,7 +133,7 @@ When `$excel->read_next_row()` is invoked for the first time for selected sheet,
 
 Both of the structures mentioned above will be destroyed if Parsing mode is changed or re-selected, or if `$excel->free()` is called, or when your MSXLS instance is destroyed. Additionally, __Rows map__ will be destroyed when `$excel->select_sheet()` is called, because __Rows map__ is only valid for a selected sheet, unlike __SST map__, which is relevant for the whole file.
 
-One advantage of Row-by-row mode is that it allowes many settings to be changed that affect which cells are proccessed and how. Please refer to [Reading settings](#reading-settings-mostly-for-row-by-row-mode) part of [Methods (functions)](#methods-functions) subsection for more information.
+One advantage of Row-by-row mode is that it allowes many settings to be changed that affect which cells are proccessed and how. Please refer to [Reading settings](#3-reading-settings-mostly-for-row-by-row-mode) part of [Methods (functions)](#methods-functions) subsection for more information.
 
 ---
 ### Debug mode
@@ -171,10 +171,10 @@ _Note:_ MSCFB helper class may also need to use a temporary stream resource. It 
 _Note:_ temporary files are automatically managed (created and deleted) by PHP.
 
 
-## 4. How it works
+## 4. Additional information
 
 ### Rows and columns numeration
-Rows and columns numeration in this parser is zero-based. Excel row numeration is numeric and starts from _1_, and column numeration is alphabetical and starts with _A_. Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If __Array__ mode is used, cells are stored in _$cells_ property, which is a two-dimensional array. The 1st index corresponds to row number, and the 2nd index is the column number. In __Row-by-row__ mode, a single row is returned as an array of cells. If `$row` contains a row returned by _read_next_row()_, Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, the user can get zero-based row number with _last_read_row_number()_ method. The table below illustrates how the cells are numerated.
+Rows and columns numeration in this parser is zero-based. Excel row numeration is numeric and starts from __1__, and column numeration is alphabetical and starts with __A__. Excel references a single cell by its column letter and row number, for example: A1, B3, C4, F9. If [Array mode](#1-array-mode) is used, cells are stored in `$cells` property, which is a two-dimensional array. The 1st index corresponds to row number, and the 2nd index is the column number. In [Row-by-row mode](#2-row-by-row-mode), a single row is returned as an array of cells. If `$row` contains a row returned by `read_next_row()` method, Column A is `$row[0]`, column D is `$row[3]`, etc. In this mode, the user can get zero-based row number with `last_read_row_number()` method. The table below illustrates how the cells are numerated.
 
 |     | A | B | C | D | E | F |
 |:---:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -188,13 +188,13 @@ Rows and columns numeration in this parser is zero-based. Excel row numeration i
 
 ### Some terms
 
-A _Compound File_, or Microsoft Binary Compound File, is a special file format which is essentially a FAT-like container for other files.
+A __Compound File__, or Microsoft Binary Compound File, is a special file format which is essentially a FAT-like container for other files.
 
-_Workbook stream_, or just _Workbook_ is a binary bytestream that essentially represents excel BIFF file.
+__Workbook stream__, or just __Workbook__ is a binary bytestream that essentially represents excel BIFF file.
 
-Excel file format is known as _BIFF_, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called _SST_ (Shared Strings Table), which stores unique strings inside itself in UTF16 little-endian encoding, and reference to SST entry is stored in cell.
+Excel file format is known as __BIFF__, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called _SST_ (Shared Strings Table), which stores unique strings inside itself in UTF16 little-endian encoding, and reference to SST entry is stored in cell.
 
-Workbook stream consists of Workbook Globals substream and one or more Sheet substreams. Workbook Globals contains information about the file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or Sheets represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
+Workbook stream consists of _Workbook Globals_ substream and one or more _Sheet_ substreams. __Workbook Globals__ contains information about the file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or __Sheets__ represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
 
 Excel keeps track of cells starting with first non-empty row and non-empty column, ending with last non-empty row and non-empty column. All other cells are completely ignored by this parser like they don't exist at all.
 
