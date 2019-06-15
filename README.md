@@ -61,39 +61,37 @@ unset($excel);
 ```
 
 ## 3. Advanced usage
+_Note:_ every example in this section assumes that `$excel` is your MSXLS instance: `$excel = new MSXLS('file.xls')`.
 
 ### Sheet selection
-
-If there is more than one worksheet in your file, and you want to parse the worksheet that is not the first valid worksheet, you will have to select your sheet manually. To do this, use `$excel->get_valid_sheets()` method to get an array with all available selectable worksheets. When the desired worksheet has been found, use its array index or `'number'` entry as `$sheet` parameter to `$excel->select_sheet($sheet)` method. For example:
+If there is more than one worksheet in your file, and you want to parse the worksheet that is not the first valid non-empty worksheet, you will have to select your sheet manually. To do this, use `$excel->get_valid_sheets()` method to get an array with all available selectable worksheets. When the desired worksheet has been found, use its array index or _'number'_ entry as a parameter to `$excel->select_sheet($sheet)` method. For example:
 ```PHP
 var_dump($excel->get_valid_sheets()); //outputs selectable sheets info
 $excel->select_sheet(1); //select sheet with index 1
 ```
-Alternatively, if you know sheet name, you can use it in the same method to select sheet:
+Alternatively, if you know sheet name, you can use it with the same method to select sheet:
 ```PHP
 $excel->select_sheet('your_sheet_name'); //also works
 ```
-Leave out sheet index/name to select the first available sheet:
+Leave out sheet index/name to select the first available valid sheet:
 ```PHP
-$excel->select_sheet(); //selects the first valid sheet in file
+$excel->select_sheet(); //selects the first valid non-empty sheet in XLS file
 ```
+You can use `$excel->get_active_sheet()` method to get information about selected sheet.  
+Refer to [Methods (functions)](#methods-functions) subsection to get more information about methods mentioned above.
 
-You can use `$excel->get_active_sheet()` method to return selected sheet info.
+_Note:_ The first valid worksheet is selected automatically when the file is opened or when Parsing mode is changed.
 
-See __*Public properties and methods*__ below to get more information about methods mentioned above.
-
-_Note:_ The first valid worksheet is selected automatically when file is opened or when Parsing mode is changed.
-
-
+---
 ### Parsing modes
 
 There are two modes which the parser can work in: __Array mode__ and __Row-by-row mode__. By default, Array mode is used.
 
-#### Array mode
+#### 1. Array mode
 
 This mode lets you read all cells at once into `$excel->cells` array property. It is designed to read all available data as fast as possible when no additional cells processing needed. This mode is used by default. This mode can be selected with `$excel->switch_to_array()` method. Data is read with `$excel->read_everything()` method into `$excel->cells` array property. Example:
 ```PHP
-$excel = new MSXLS('path_to_file.xls'); // Open file
+$excel = new MSXLS('path_to_file.xls'); // Open XLS file
 $excel->read_everything(); // Read cells into $excel->cells
 var_dump($excel->cells); // Output all parsed cells from XLS file
 ```
@@ -115,14 +113,14 @@ Note that all empty rows and cells will create 'holes' in `$excel->cells` array,
 
 Array mode has only one additional setting for parsing: `$excel->set_fill_xl_errors($fill = false, $value = '#DEFAULT!')`, which defines whether or not to process excel cells with error values (such as #DIV/0!). Please refer to __*Public properties and methods*__ section for more information. In short, if `$fill` is `false`, error cells are skipped, otherwise they are filled with `$value`.
 
-#### Row-by-row mode
+#### 2. Row-by-row mode
 
 This mode lets you read cells row by row. It is designed to let you process each row individually with using only necessary amount of memory. This mode is selected with `$excel->switch_to_row()` method. Data is read with `$excel->read_next_row()` method, which returns a single row as an array of cells.
 
 
 As the method name implies, row number is advanced automatically, so next time you call `$excel->read_next_row()` method, it will read the next row. This method returns `null` if there are no more rows to read. You can manually set row number to read with `$excel->set_active_row($row_number)`, where `$row_number` is a valid zero-based excel row number. You can get the first and the last valid row number with `$excel->get_active_sheet()` method:
 ```PHP
-$excel = new MSXLS('path_to_file.xls'); // Open file
+$excel = new MSXLS('path_to_file.xls'); // Open XLS file
 $excel->switch_to_row(); // Switch mode to Row-by-row
 
 $info = $excel->get_active_sheet(); //get selected sheet info
@@ -148,6 +146,7 @@ Both of the structures mentioned above will be destroyed if Parsing mode is chan
 
 The main difference of Row-by-row mode is that it allowes many settings to be changed that affect which cells are proccessed and how. Please refer to __*Public properties and methods*__ section for more information. Methods that are relevant to Row-by-row mode settings are marked with __\[Row-by-row\]__ string.
 
+---
 ### Debug mode
 
 Debug mode enables output (echo) of all error and warning messages. To enable Debug mode, set the 2nd parameter to `true` in constructor:
@@ -161,6 +160,7 @@ $file = new MSCFB("path_to_cfb_file.bin", true, null, true);
 
 **Warning!** PHP function name in which error occured is displayed alongside the actual message. Do not enable Debug mode in your production code since it may pose a security risk! This warning applies both to MSXLS class and MSCFB class.
 
+---
 ### Temporary files and memory
 
 If XLS file was saved as a Compound File (which is almost always the case), then MSXLS must use a temporary PHP stream resource to store Workbook stream that is extracted from the Compound File. It is stored either in memory or as a temporary file, depending on data size. By default, data that exceeds 2MiB (PHP's default value) is stored as a temporary file. XLS file may sometimes be stored as a Workbook stream itself, in which case a temporary file or stream is not needed and not created.
@@ -205,15 +205,15 @@ _Workbook stream_, or just _Workbook_ is a binary bytestream that essentially re
 
 Excel file format is known as _BIFF_, or _Binary Interchangeable File Format_. There are several versions exist which differ in how they store excel data from version to version. This parser supports BIFF version 5, or BIFF5, which is the file format used in Excel 95, and BIFF version 8 (BIFF8), which is used in Excel 97-2003 versions. The biggest difference between BIFF5 and BIFF8 is that they store strings differently. In BIFF5, strings are stored inside cells in locale-specific 8-bit codepage (for example, CP1252), while BIFF8 has a special structure called _SST_ (Shared Strings Table), which stores unique strings inside itself in UTF16 little-endian encoding, and reference to SST entry is stored in cell.
 
-Workbook stream consists of Workbook Globals substream and one or more Sheet substreams. Workbook Globals contains information about file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or Sheets represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
+Workbook stream consists of Workbook Globals substream and one or more Sheet substreams. Workbook Globals contains information about the file such as BIFF5 encoding, encryption, sheets information and much more (we do not actually need much more). Sheet substreams, or Sheets represent actual sheets that are created in Excel. They can be Worksheets, Charts, Visual Basic modules and some more, but only regular Worksheets can be parsed.
 
 Excel keeps track of cells starting with first non-empty row and non-empty column, ending with last non-empty row and non-empty column. All other cells are completely ignored by this parser like they don't exist at all.
 
-### What happens when I open file
+### What happens when I open XLS file
 
 Note: during every stage extensive error checking is performed. See [Error handling](#error-handling) for more info.
 
-When a user opens XLS file, for example by executing `$excel = new MSXLS('file.xls');`, first thing happens is the script checks whether XLS file is stored as a Compound File (most of the time it is) or as a Workbook stream. If it is a Compound File, the script attempts to extract Workbook stream to temporary file and use that file in the future for all operations. Otherwise it will directly use supplied XLS file. The script never opens supplied XLS file for writing.
+When a user opens XLS file, for example by executing `$excel = new MSXLS('file.xls');`, first thing happens is the script checks whether XLS file is stored as a Compound File (most of the time it is) or as a Workbook stream. If it is a Compound File, the script attempts to extract Workbook stream to a temporary file and use that file in the future for all operations. Otherwise, it will directly use the supplied XLS file. The script never opens the supplied XLS file for writing.
 
 After Workbook stream is accessed, the output encoding is set to _mb_internal_encoding()_ return value. Then _get_data()_ is executed: the script extracts information such as sheets count, codepage, sheets byte offsets, etc.
 
@@ -248,7 +248,7 @@ When a worksheet is parsed, you can select another worksheet for parsing (if any
 ---
 #### General
 
-`get_data()` — Checks file for errors and encryption, gathers information such as CODEPAGE for BIFF5, SST location for BIFF8. Gathers information about all sheets in the file. Also executes _select_sheet()_ to select first valid worksheet for parsing. This method is called automatically when file is opened. Invoking it manually makes sence only if BIFF5 codepage was detected incorrectly and you cannot see sheet names (and you really need them). In this case, encoding settings must be configured with _set_encodings()_ after file opening and _get_data()_ should be called manually after it. 
+`get_data()` — Checks XLS file for errors and encryption, gathers information such as CODEPAGE for BIFF5, SST location for BIFF8. Gathers information about all sheets in the file. Also executes _select_sheet()_ to select first valid worksheet for parsing. This method is called automatically when XLS file is opened. Invoking it manually makes sence only if BIFF5 codepage was detected incorrectly and you cannot see sheet names (and you really need them). In this case, encoding settings must be configured with _set_encodings()_ after file opening and _get_data()_ should be called manually after it. 
 
 `get_biff_ver()` — returns version of excel file. _5_ means 1995 XLS file, _8_ means 1997-2003 XLS file.
 
@@ -293,7 +293,7 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell structure in W
 _**$which**_ can be set to _'first_row'_, _'last_row'_, _'first_col'_, or _'last_col'_ string, in which cases a corresponding value will be returned. _**$which**_ also can be set to _'all'_ or left out, in which case an array of all four margins will be returned. If _**$which**_ is set to something not mentioned above, _false_ will be returned.
 
 ---
-`set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed since the script detects these settings when file is opened.
+`set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (1995 XLS file). This is usually not needed since the script detects these settings when the file is opened.
 
 _**$enable**_ enables encoding conversion of BIFF5 strings.
 
@@ -318,7 +318,7 @@ _**$sheet**_ must be either a sheet number or a sheet name. Use _get_valid_sheet
 
 `switch_to_array()` — switch __Array__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
-`read_everything()` — read all cells from file into _cells_ property. Works only in __Array__ mode.
+`read_everything()` — read all cells from XLS file into _cells_ property. Works only in __Array__ mode.
 
 `read_next_row()` — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
 
