@@ -425,7 +425,7 @@ There are extensive error checks in every function that should prevent any poten
 
 The MSXLS class has been optimized for fast parsing and data extraction, while still performing error checks for safety. It is possible to marginally increase performance by leaving those error checks out, but I would strongly advise against it, because if a specially crafted mallicious file is supplied, it becomes possible to cause a memory hog or an infinite loop.
 
-The following numbers were obtained on a Windows machine (AMD Phenom II x4 940), with a 97.0 MiB test XLS file (96.2 MiB Workbook stream) using WAMP server. XLS file consists entirely of unique strings.
+The following numbers were obtained on a Windows machine (AMD Phenom II x4 940), with a 97.0 MiB test XLS file (96.2 MiB Workbook stream) using WAMP server. XLS file consists entirely of unique strings. Default [temporary file settings](#temporary-files-and-memory) is used.
 
 | Time | Memory | Time | Memory | Action | 
 |:-:|:-:|:-:|:-:|---|
@@ -434,6 +434,8 @@ The following numbers were obtained on a Windows machine (AMD Phenom II x4 940),
 | 91.08s | 192.2 MiB | 27.20s | 204.3 MiB | Open file, parse in __Row-by-row__ mode to variable
 | 54.71s |  82.9 MiB | 21.49s |  82.1 MiB | Open file, parse in __Row-by-row__ mode (don't save)
 |__PHP 5.6.25__ |__PHP 5.6.25__ |__PHP 7.0.10__ |__PHP 7.0.10__ |
+
+_Note:_ Disabling temporary files does not decrease script execution time by any significant margin. In fact, the execution time is increased sometimes.
 
 _Note:_ It took 1.65 seconds and 12.0 MiB of memory to parse a real-life XLS pricelist of 13051 entries in __Array__ mode in PHP 7.0.10. That XLS file was 3.45 MiB in size.
 
