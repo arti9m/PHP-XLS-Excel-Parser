@@ -220,31 +220,31 @@ When a worksheet is parsed, you can select another worksheet for parsing (if any
 
 ### Properties
 
-`(bool) $debug` — whether or not to display error and warning messages. Can be set as the 2nd parameter to constructor.
+__`(bool) $debug`__ — whether or not to display error and warning messages. Can be set as the 2nd parameter to constructor.
 
-`(string) $err_msg` — a string that contains all error messages concatenated into one.
+__`(string) $err_msg`__ — a string that contains all error messages concatenated into one.
 
-`(string) $warn_msg` — same as above, but for warnings.
+__`(string) $warn_msg`__ — same as above, but for warnings.
 
-`(array) $error` — array of error codes, empty if no errors occured.
+__`(array) $error`__ — array of error codes, empty if no errors occured.
 
-`(array) $warn` — array of warning codes, empty if no warnings occured.
+__`(array) $warn`__ — array of warning codes, empty if no warnings occured.
 
-`(array) $cells` — two-dimensional array which is used as storage for cells parsed in [Array mode](#1-array-mode). Filled when _read_everything()_ is invoked. This propertry is made public (instead of using a getter) mainly for performance reasons.
+__`(array) $cells`__ — two-dimensional array which is used as storage for cells parsed in [Array mode](#1-array-mode). Filled when _read_everything()_ is invoked. This propertry is made public (instead of using a getter) mainly for performance reasons.
 
 ### Methods (functions)
 
 ---
 #### General
 
-`get_data()` — Checks XLS file for errors and encryption, gathers information such as CODEPAGE for BIFF5, SST location for BIFF8. Gathers information about all sheets in the file. Also executes _select_sheet()_ to select first valid worksheet for parsing. This method is called automatically when XLS file is opened. Invoking it manually makes sence only if BIFF5 codepage was detected incorrectly and you cannot see sheet names (and you really need them). In this case, encoding settings must be configured with _set_encodings()_ after file opening and _get_data()_ should be called manually after it. 
+__`get_data()`__ — Checks XLS file for errors and encryption, gathers information such as CODEPAGE for BIFF5, SST location for BIFF8. Gathers information about all sheets in the file. Also executes _select_sheet()_ to select first valid worksheet for parsing. This method is called automatically when XLS file is opened. Invoking it manually makes sence only if BIFF5 codepage was detected incorrectly and you cannot see sheet names (and you really need them). In this case, encoding settings must be configured with _set_encodings()_ after file opening and _get_data()_ should be called manually after it. 
 
-`get_biff_ver()` — returns version of excel file. _5_ is BIFF5 (Excel 95 file), _8_ is BIFF8 (Excel 97-2003 file).
+__`get_biff_ver()`— — returns version of excel file. _5_ is BIFF5 (Excel 95 file), _8_ is BIFF8 (Excel 97-2003 file).
 
-`get_codepage()` — returns CODEPAGE string. Relevant only for BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8, all strings are unicode (UTF-16 little endian).
+__`get_codepage()`__ — returns CODEPAGE string. Relevant only for BIFF5 files, in which strings are encoded using a specific codepage. In BIFF8, all strings are unicode (UTF-16 little endian).
 
 ---
-`get_sheets()` — returns array of structures with sheets information. See the code below.
+__`get_sheets()`__ — returns array of structures with sheets information. See the code below.
 ```PHP
 $excel = new MSXLS('file.xls');
 $sheets = $excel->get_sheets(); //$sheets is array of sheet info structures
@@ -268,21 +268,21 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell record in Work
 ```
 
 ---
-`get_valid_sheets()` — same as above, but returns only valid non-empty selectable worksheets. Additional _$sheet\['number'\]_ entry is present, which is the same number as the index of this sheet in the array returned by  _get_sheets()_.
+__`get_valid_sheets()`__ — same as above, but returns only valid non-empty selectable worksheets. Additional _$sheet\['number'\]_ entry is present, which is the same number as the index of this sheet in the array returned by  _get_sheets()_.
 
-`get_active_sheet()` — returns currently selected sheet info in the same structure that _get_valid_sheets()_ array consists of.
+__`get_active_sheet()`__ — returns currently selected sheet info in the same structure that _get_valid_sheets()_ array consists of.
 
-`get_filename()` — returns a file name string originally supplied to the constructor.
+__`get_filename()`__ — returns a file name string originally supplied to the constructor.
 
-`get_filesize()` — returns size of the file supplied to the constructor (in bytes).
+__`get_filesize()`__ — returns size of the file supplied to the constructor (in bytes).
 
 ---
-`get_margins($which = 'all')` — returns currently set margins for the selected worksheet. Margins are set automatically when the sheet is selected. Margins can be set manually with _set_margins()_ method. They define what rows and columns are read by _read_next_row()_ method.
+__`get_margins($which = 'all')`__ — returns currently set margins for the selected worksheet. Margins are set automatically when the sheet is selected. Margins can be set manually with _set_margins()_ method. They define what rows and columns are read by _read_next_row()_ method.
 
 `$which` can be set to _'first_row'_, _'last_row'_, _'first_col'_, or _'last_col'_ string, in which cases a corresponding value will be returned. `$which` also can be set to _'all'_ or left out, in which case an array of all four margins will be returned. If `$which` is set to something not mentioned above, _false_ will be returned.
 
 ---
-`set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)` — manually set transcoding parameters for BIFF5 (Excel 95 file). This is usually not needed since the script detects these settings when the file is opened.
+__`set_encodings($enable = true, $from = null, $to = null, $use_iconv = false)`__ — manually set transcoding parameters for BIFF5 (Excel 95 file). This is usually not needed since the script detects these settings when the file is opened.
 
 `$enable` parameter enables encoding conversion of BIFF5 strings.
 
@@ -293,41 +293,42 @@ $sheet['cells_offset'];  //*[Integer] Byte offset of the 1st cell record in Work
 `$use_iconv` — If _true_, _iconv()_ function will be used for convertion. Otherwise, _mb_convert_encoding()_ will be used.
 
 ---
-`set_output_encoding($enc = null)` — sets output encoding which excel strings should be decoded to.  
+__`set_output_encoding($enc = null)`__ — sets output encoding which excel strings should be decoded to.  
 `$enc` is target encoding string. If parameter set to _null_ or left out, a value returned by `mb_internal_encoding()` function will be used.
 
 _Note:_ Setting `$to` parameter in _set_encodings()_ and using _set_output_encoding()_ do the same thing.  
 _set_output_encoding()_ is provided for simplicity if BIFF8 files are used.
 
 ---
-`select_sheet($sheet = -1)` — Select a worksheet to read data from.
+__`select_sheet($sheet = -1)`__ — Select a worksheet to read data from.
 
 `$sheet` must be either a sheet number or a sheet name. Use _get_valid_sheets()_ to get those, if needed. _-1_ or leaving out the parameter will select the first valid worksheet.
 
 ---
-`switch_to_row()` — switch to __Row-by-row__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
+__`switch_to_row()`__ — switch to __Row-by-row__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
-`switch_to_array()` — switch __Array__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
+__`switch_to_array()`__ — switch __Array__ parsing mode. Will also execute _free(false)_ and _select_sheet()_.
 
-`read_everything()` — read all cells from XLS file into _cells_ property. Works only in __Array__ mode.
+__`read_everything()`__ — read all cells from XLS file into _cells_ property. Works only in __Array__ mode.
 
-`read_next_row()` — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
+__`read_next_row()`__ — parses next row and returns array of parsed cells. Works only in __Row-by-row__ mode.
 
 ---
 #### Memory free-ers
-`free_stream()` — Close Workbook stream, free memory associated with it and delete temporary files.
+__`free_stream()`__ — Close Workbook stream, free memory associated with it and delete temporary files.
 
-`free_cells()` — re-initialize _$cells_ array property (storage for [Array mode](#1-array-mode)).
+__`free_cells()`__ — re-initialize _$cells_ array property (storage for [Array mode](#1-array-mode)).
 
-`free_sst()` — re-initialize SST structure (Shared Strings Table, used by [Array mode](#1-array-mode)).
+__`free_sst()`__ — re-initialize SST structure (Shared Strings Table, used by [Array mode](#1-array-mode)).
 
-`free_rows_map()` — re-initialize rows map storage used by [Row-by-row mode](#2-row-by-row-mode).
+__`free_rows_map()`__ — re-initialize rows map storage used by [Row-by-row mode](#2-row-by-row-mode).
 
-`free_sst_maps()` — re-initialize SST offsets map and SST lengths storage used by [Row-by-row mode](#2-row-by-row-mode).
+__`free_sst_maps()`__ — re-initialize SST offsets map and SST lengths storage used by [Row-by-row mode](#2-row-by-row-mode).
 
-`free_maps()` — execute both _free_row_map()_ and _free_sst_maps()_.
+__`free_maps()`__ — execute both _free_row_map()_ and _free_sst_maps()_.
 
-`free($stream = true)` — free memory by executing all "free"-related methods mentioned above. _free_stream()_ is called only if `$stream` parameter evaluates to _true_.
+__`free($stream = true)`__ — free memory by executing all "free"-related methods mentioned above.  
+_free_stream()_ is called only if `$stream` parameter evaluates to _true_.
 
 ---
 #### Reading settings (mostly for Row-by-row mode)
@@ -343,7 +344,8 @@ __`set_margins($first_row = null, $last_row = null, $first_col = null, $last_col
 __`set_active_row($row_number)`__ — set which row to read next.  
 `$row_number` is zero-based excel row number and it must not be out of bounds set by _set_margins()_ method.
 
-__`last_read_row_number()`__ — returns most recently parsed row number. Valid only if called immediately after _read_next_row()_.
+__`last_read_row_number()`__ — returns most recently parsed row number.  
+Valid only if called immediately after _read_next_row()_.
 
 __`next_row_number()`__ — returns row number that is to be parsed upon next call of _read_next_row()_.  
 Returns _-1_ if there is no more rows left to parse.
