@@ -4,6 +4,31 @@ Probably, the fastest possible and the most efficient parser for XLS excel files
 _Note:_ this parser works __only with older XLS files__ that were used in Microsoft Excel 95 (BIFF5) and 97-2003 (BIFF8).  
 It will not work with the newer ones, XLSX!
 
+1. [Requirements](#1-requirements)
+2. [Basic usage](#2-basic-usage)
+3. [Advanced usage](#3-advanced-usage)
+	- [Sheet selection](#sheet-selection)
+	- [Parsing modes](#parsing-modes)
+		1. [Array mode](#1-array-mode)
+		2. [Row-by-row mode](#2-row-by-row-mode)
+	- [Debug mode](#debug-mode)
+	- [Temporary files and memory](#temporary-files-and-memory)
+4. [Additional information](#4-additional-information)
+	- [Rows and columns numeration](#rows-and-columns-numeration)
+	- [Some terms](#some-terms)
+	- [What happens when I open XLS file](#what-happens-when-i-open-xls-file)
+5. [Public properties and methods](#5-public-properties-and-methods)
+	- [Properties](#properties)
+	- [Methods (functions)](#methods-functions)
+		1. [General](#1-general)
+		2. [Memory free-ers](#2-memory-free-ers)
+		3. [Reading settings (mostly for Row-by-row mode)](#3-reading-settings-mostly-for-row-by-row-mode)
+		4. [Constructor and destructor](#4-constructor-and-destructor)
+6. [Error handling](#6-error-handling)
+7. [Security considerations](#7-security-considerations)
+8. [Performance and memory](#8-performance-and-memory)
+9. [More documentation](#9-more-documentation)
+
 ## 1. Requirements
 
 At least __PHP 5.6__ 32-bit is required. Untested with PHP versions prior to 5.6.  
