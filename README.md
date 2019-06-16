@@ -458,7 +458,7 @@ The following numbers were obtained on a Windows machine (AMD Phenom II x4 940),
 | 77.77s | 213.2 MiB | 16.41s | 128.8 MiB | Open XLS File and parse in __Array__ mode
 | 91.08s | 192.2 MiB | 27.20s | 204.3 MiB | Open file, parse in __Row-by-row__ mode to variable
 | 54.71s |  82.9 MiB | 21.49s |  82.1 MiB | Open file, parse in __Row-by-row__ mode (don't save)
-|__PHP 5.6.25 32-bit__ |__PHP 5.6.25 32-bit__ |__PHP 7.0.10 64-bit__ |__PHP 7.0.10 64-bit__ |
+|__5.6.25 32-bit__ |__5.6.25 32-bit__ |__7.0.10 64-bit__ |__7.0.10 64-bit__ | __PHP Version__
 
 _Note:_ Disabling temporary files does not decrease script execution time by any significant margin. In fact, the execution time is increased sometimes.
 
